@@ -48,6 +48,6 @@ for index_1= 1:length(V_pvt)
 end
 
 %Outputs
-V_pvt= V_pvt(I_pvt);
-I_pvt= I_pvt(I_pvt);
+V_pvt= V_pvt;
+I_pvt= I_pvt;
 P_pvt= I_pvt.*V_pvt;
