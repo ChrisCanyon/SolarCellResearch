@@ -1,5 +1,18 @@
 clear;
 
-[inputs, labels] = generateDataset(1,10000);
+[inputs, labels] = generateDataset(2,5);
 
-save('dataset10k');
+save('dataset');
+
+clear;
+
+[inputs, labels] = generateDataset(2,1000);
+
+save('dataset1k');
+
+clear;
+
+[inputs, labels] = generateDataset(2,10000);
+
+save('dataset');
+ 

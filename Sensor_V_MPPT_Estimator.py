@@ -14,17 +14,16 @@ def evaluate_model(model, testdatafile):
     predictions = model.predict(testX)
     flat_list = [item for sublist in predictions for item in sublist]
 
-    print('avg error in Volts for test data: %s' % testdatafile)
     totalError = 0
     i = 0
     for p in flat_list:
         error = abs(testY[i] - p)
         totalError += math.pow(error, 2)
         i += 1
-    mse = (totalError/i)
-    print("Preditions: ",flat_list)
-    print("Actual: ", testY)
-    print(mse)
+    averageErrorVolts = (totalError/i)
+
+    print('avg error in Volts for test data: %s' % testdatafile)
+    print(averageErrorVolts)
 
 def train_model(layers, dataset):
     data = sio.loadmat(dataset)
@@ -56,7 +55,7 @@ def train_model(layers, dataset):
 
 try:
     # load json and create model
-    json_file = open('model.json', 'r')
+    json_file = open('model3x7.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
@@ -66,7 +65,7 @@ try:
     model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
 except OSError as e:
     print('No saved model, training new one')
-    layers = [9,6,4,3]
+    layers = [7,7,7]
     model = train_model(layers, 'dataset10k.mat')
 
-evaluate_model(model, 'dataset.mat')
+evaluate_model(model, 'dataset1k.mat')
