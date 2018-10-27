@@ -7,6 +7,7 @@ from keras.layers import Activation, Dense
 import scipy.io as sio
 import numpy
 import math
+from multiprocessing.dummy import Pool as ThreadPool 
 
 
 # my attempt to make structure generation easier to read
@@ -40,7 +41,7 @@ def array_increment(array, N):
 #  verbose:  0 = no training output 
 #            1 = training output
 
-def train_model(layers, dataset, name, batch, verbose):
+def train_model(layers, dataset, name="trash", batch=100, verbose=0):
     data = sio.loadmat(dataset)
 
     X = numpy.array(data['inputs'])
@@ -61,6 +62,7 @@ def train_model(layers, dataset, name, batch, verbose):
     f.write("%f" % MSE) 
     f.close()
 
+    print("Finished:", layers)
     return model
 
 # saves model to file with name 'name'
@@ -183,7 +185,10 @@ def sim(input, name="optimalNN"):
 ##                ##
 ####################
 
-configured_model = configure_model(2,1,'dataset1k.mat', 100, 0)
-print('Ding: Config Done')
-evaluate_model(configured_model, 'dataset10k.mat', 1)
+threadCount = 16
+pool = ThreadPool(threadCount)
+inputs = []
+for i in range(16):
+    inputs.append(([i,i,i], 'dataset10k'))
 
+results = pool.starmap(train_model, inputs)
