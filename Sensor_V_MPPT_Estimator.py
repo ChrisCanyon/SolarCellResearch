@@ -1,5 +1,8 @@
 # TODO: make NN save and load from a folder in a folder called NN
 # TODO: ensure MSE is only calculated once per NN
+# TODO: make evaulate model give average
+# TODO: make geneitc learn
+# TODO: 5-fold CV :retrain models to avoid local mins and get avg MSE over X trains
 
 import keras
 from keras.models import model_from_json
@@ -40,12 +43,19 @@ def array_increment(array, N):
 #  batch:    batch_size
 #  verbose:  0 = no training output 
 #            1 = training output
+#  epochs:   number of epochs in model.fit
+#  folds:    number of folds for K-fold CV
 
-def train_model(layers, dataset, name="trash", batch=100, verbose=0):
+def train_model(layers, dataset, name="trash", batch=100, verbose=0, epochs=1000, folds=1):
     data = sio.loadmat(dataset)
 
     X = numpy.array(data['inputs'])
     Y = numpy.array(data['labels'][0])
+
+    print("input length", len(Y))
+
+    if folds >= len(Y):
+        print("Error in train_model. Dataset not larger enough for {folds}-fold Cross Validation")
 
     model = keras.Sequential()
     model.add(Dense(layers[0], input_dim=2, activation='sigmoid'))
@@ -55,8 +65,8 @@ def train_model(layers, dataset, name="trash", batch=100, verbose=0):
 
     model.add(Dense(1))
     model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
-    model.fit(X, Y, epochs=1000, batch_size=batch, verbose=verbose)
-    save_model(model, name)
+    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
+    save_model(model, name) 
     MSE = evaluate_model(model, 'dataset1k.mat')
     f = open(name, 'w+')
     f.write("%f" % MSE) 
@@ -147,6 +157,7 @@ def shutuplinter(model_name, MSE, model):
 def configure_model(N, L, trainingSet, batchSize=1000, verbose=0, testSet='dataset1k.mat'):
     bestModel = None
     bestMSE = None
+    bestLayers = None
 
     for i in range(L):
         layers = [1 for X in range(i+1)] #create array of layers with 1 node each
@@ -163,11 +174,14 @@ def configure_model(N, L, trainingSet, batchSize=1000, verbose=0, testSet='datas
             if bestModel == None:
                 bestModel = model
                 bestMSE = MSE
+                bestLayer = layers
 
             if compare_models(model, bestModel, testSet) == 1:
                 bestModel = model
                 bestMSE = MSE
+                bestLayer = layers
 
+    print("Best model for N:", N, "L:", L, "\nMSE:", bestMSE, "\nlayers:", bestLayer)
     return bestModel 
 
 def sim(input, name="optimalNN"):
@@ -185,10 +199,6 @@ def sim(input, name="optimalNN"):
 ##                ##
 ####################
 
-threadCount = 16
-pool = ThreadPool(threadCount)
-inputs = []
-for i in range(16):
-    inputs.append(([i,i,i], 'dataset10k'))
+model = configure_model(2,2,'dataset1k.mat', 1000, 1)
 
-results = pool.starmap(train_model, inputs)
+evaluate_model(model, 'dataset10k', 1)

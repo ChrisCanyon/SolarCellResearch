@@ -1,18 +1,8 @@
 clear;
 
-[inputs, labels] = generateDataset(2,5);
+[inputs, labels] = generateDataset(2,100000);
 
-save('dataset');
+save('dataset100k');
 
-clear;
 
-[inputs, labels] = generateDataset(2,1000);
-
-save('dataset1k');
-
-clear;
-
-[inputs, labels] = generateDataset(2,10000);
-
-save('dataset');
  
