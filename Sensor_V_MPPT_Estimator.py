@@ -1,7 +1,7 @@
 # TODO: make NN save and load from a folder in a folder called NN
 # TODO: ensure MSE is only calculated once per NN
 # TODO: make evaulate model give average
-# TODO: make geneitc learn
+# TODO: make genetic learn
 # TODO: 5-fold CV :retrain models to avoid local mins and get avg MSE over X trains
 
 import keras
@@ -34,67 +34,106 @@ def array_increment(array, N):
             array[size - 1 - i] += 1
             return
 
+def chunks(l, n):
+    """Yield successive n-sized chunks from l."""
+    for i in range(0, len(l), n):
+        yield l[i:i + n]
+
+def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, verbose=0, epochs=1000):
+    data = sio.loadmat(evaluateSet)
+
+    X = numpy.array(data['inputs'])
+    Y = numpy.array(data['labels'][0])
+    datasize = len(Y)
+    chunkSize = int(datasize/folds)
+    
+    if folds >= datasize:
+        print("Error in CVtrain. Dataset not larger enough for {0}-fold CV".format(folds))
+        return None
+    if chunkSize < batch:
+        print("Error in CVtrain. Batch size larger that chunk size for {0}-fold CV".format(folds))
+        return None
+
+    Xchunks = chunks(X, chunkSize)
+    Ychunks = chunks(Y, chunkSize)
+
+    #train model
+    bestModel = None
+    bestMSE = 1000
+    totalMSE = 0
+    for i in range(folds):
+        if verbose == 1:
+            print("Fold", i)
+
+        model = train_model(layers, next(Xchunks), next(Ychunks), batch, verbose, epochs)
+        MSE = evaluate_model(model, evaluateSet, 0)
+
+        totalMSE += MSE
+
+        if MSE < bestMSE:
+            bestModel = model
+            bestMSE = MSE
+    
+    avgMSE = totalMSE/(i+1)
+    print("Average MSE:", avgMSE)
+    save_model(bestModel, name, layers, avgMSE)
+    return bestModel
+
+
 # train_model creates a keras.Sequential() NN with network structure 'layers'
 # returns a trained model
 # Paramters:
 #  layers:   array of node lengths
-#  dataset:  .mat file with training data. Created using saveDataset.m 
-#  name:     filename for the new NN
+#  X, Y:     training data for use with model.fit
 #  batch:    batch_size
 #  verbose:  0 = no training output 
 #            1 = training output
 #  epochs:   number of epochs in model.fit
 #  folds:    number of folds for K-fold CV
 
-def train_model(layers, dataset, name="trash", batch=100, verbose=0, epochs=1000, folds=1):
-    data = sio.loadmat(dataset)
-
-    X = numpy.array(data['inputs'])
-    Y = numpy.array(data['labels'][0])
-
-    print("input length", len(Y))
-
-    if folds >= len(Y):
-        print("Error in train_model. Dataset not larger enough for {folds}-fold Cross Validation")
-
+def train_model(layers, X, Y, batch=100, verbose=0, epochs=1000):
+    #create model
     model = keras.Sequential()
-    model.add(Dense(layers[0], input_dim=2, activation='sigmoid'))
 
+    model.add(Dense(layers[0], input_dim=2, activation='sigmoid'))
     for nodes in layers[1:]:
         model.add(Dense(nodes, activation='sigmoid'))
-
     model.add(Dense(1))
+    
     model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
-    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
-    save_model(model, name) 
-    MSE = evaluate_model(model, 'dataset1k.mat')
-    f = open(name, 'w+')
-    f.write("%f" % MSE) 
-    f.close()
 
-    print("Finished:", layers)
+    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
+
     return model
 
 # saves model to file with name 'name'
-def save_model(model, name):
+def save_model(model, name, layers, MSE):
+    print("Saving model:", name, "\nMSE:", MSE)
     # serialize model to JSON
     model_json = model.to_json()
-    with open(name+".json", "w") as json_file:
+    with open("./NNs/" + name+".json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
     model.save_weights(name+".h5")
+    # save layer structure
+    with open("./NNs/" + name+"_structure", "w") as structure_file:
+        for node in layers:
+            structure_file.write(str(node) + ' ')
+    # save MSE
+    with open("./NNs/" + name+"_MSE" , 'w') as f:
+        f.write("%f" % MSE)
 
 # load_model loads a model with name 'name'
 # Returns a compiled model
 # TODO: Make loss, optimizer, and metrics optional input variables
 
 def load_model(name):
-    json_file = open(name + '.json', 'r')
+    json_file = open("./NNs/" + name + '.json', 'r')
     loaded_model_json = json_file.read()
     json_file.close()
     model = model_from_json(loaded_model_json)
     # load weights into new model
-    model.load_weights(name + ".h5")
+    model.load_weights("./NNs/" + name + ".h5")
     print("Loaded model from disk")
     model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
     return model
@@ -121,40 +160,30 @@ def evaluate_model(model, testdatafile, verbose=0):
         print('MSE for test data: {0}, {1}'.format(testdatafile, MSE))
     return MSE
 
-# compares 'model' with the model_name and saves the better as model_name
-def compare_models(model, model2, dataset):
-    MSE1 = evaluate_model(model, dataset)
+# compares 2 models against the same dataset
+# returns 1 if model1 has lower MSE than model2
+def compare_models(model1, model2, dataset):
+    MSE1 = evaluate_model(model1, dataset)
     MSE2 = evaluate_model(model2, dataset)
 
     if MSE2 > MSE1:
         return 1
     return 0
 
-def shutuplinter(model_name, MSE, model):
-    try:
-        # get model_name MSE from file
-        f = open(model_name, 'r')
-        best = float(f.read())
-        f.close()
+# compare models saved model
+# allows comparison of AVG MSE computed by CVtrain
+# returns 1 if model1 has lower MSE than model2
+def compare_saved_models(model1, model2):
+    MSE1 = getMSE(model1)
+    MSE2 = getMSE(model2)
 
-        print("Old best:", best, "Current config:", MSE)
-        if best > MSE:
-            print("New best config. Saving")
-            save_model(model, model_name)
-            f = open(model_name, 'w')
-            f.write("%f" % MSE)
-            f.close()
-    except FileNotFoundError as e:
-        print(e, "No old best, creating files...")
-        f = open(model_name, 'w+')
-        f.write("%f" % MSE) 
-        f.close()
-        save_model(model, model_name)
-
+    if MSE2 > MSE1:
+        return 1
+    return 0
 # searches through all possible layer node arrangments
 # for L layers with up to N nodes each
 
-def configure_model(N, L, trainingSet, batchSize=1000, verbose=0, testSet='dataset1k.mat'):
+def configure_model(N, L, trainingSet, evaluateSet, batchSize=100, verbose=0, epochs=500):
     bestModel = None
     bestMSE = None
     bestLayers = None
@@ -168,23 +197,24 @@ def configure_model(N, L, trainingSet, batchSize=1000, verbose=0, testSet='datas
         for j in range(possibleStructures):
             array_increment(layers, N) # assuming all 1 node layers is bad
             print("Training with layers:", layers)
-            model = train_model(layers, trainingSet, 'test', batchSize, verbose)
-            MSE = evaluate_model(model, testSet, 1)
-
+            model = CVtrain(layers, trainingSet, evaluateSet, 5, 'test', batchSize, verbose, epochs)
+            MSE = getMSE('test')
             if bestModel == None:
                 bestModel = model
                 bestMSE = MSE
-                bestLayer = layers
+                bestLayers = layers
 
-            if compare_models(model, bestModel, testSet) == 1:
+            if  bestMSE > MSE:
                 bestModel = model
                 bestMSE = MSE
-                bestLayer = layers
+                bestLayers = layers
 
-    print("Best model for N:", N, "L:", L, "\nMSE:", bestMSE, "\nlayers:", bestLayer)
+
+    print("Best model for N:", N, "L:", L, "\nMSE:", bestMSE, "\nlayers:", bestLayers)
+    save_model(bestModel, str(N)+'x'+str(L)+"optimalNN", bestLayers, bestMSE)
     return bestModel 
 
-def sim(input, name="optimalNN"):
+def sim(input, name):
     try:
         model = load_model(name)
     except OSError as e:
@@ -193,12 +223,17 @@ def sim(input, name="optimalNN"):
 
     return model.predict(input)
 
+# returns the saved MSE for a NN
+def getMSE(name):
+    f = open("./NNs/"+name+"_MSE", 'r')
+    MSE = float(f.read())
+    f.close()
+    return MSE
+
 ####################
 ##                ##
 ##  ~~~ Main ~~~  ##
 ##                ##
 ####################
 
-model = configure_model(2,2,'dataset1k.mat', 1000, 1)
-
-evaluate_model(model, 'dataset10k', 1)
+model = configure_model(2,2, "dataset10k.mat", "dataset1k.mat")
