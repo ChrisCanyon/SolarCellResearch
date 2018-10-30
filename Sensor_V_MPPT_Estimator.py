@@ -267,11 +267,13 @@ def reproduce(model1, model2):
     return model3
 
 def train_generation(gen, trainingSet, evaluateSet, batchSize, verbose, epochs):
+    print("Training generation")
     MSEs = []
     for i in range(len(gen)):
         trainFriendlyLayer = handle_zeros(gen[i])
         MSEs.append(CVtrain(trainFriendlyLayer, trainingSet, evaluateSet, 5, "trash", batchSize, verbose, epochs))
     
+    print("MSEs after training:", MSEs)
     return MSEs
 
 # TODO: look into mutate options
@@ -306,21 +308,25 @@ def generate_next_generation(lastGen, MSEs, N, L):
     errors = list(errors)
     structures = list(structures)
 
+    # convert errors to some fitness value
+    maxError = max(errors)
+    fitness = []
+    for e in errors:
+        fitness.append(maxError/e) #dividing maxError/e makes smaller errors end up with larger fitness scores
+
     # Save top X structures for next gen
     nextGen = structures[0:5]
 
     # loop to fill rest of the generation
     x = len(MSEs)
     for i in range(x - 5):
+
         # get mom and dad
-        # convert errors to some fitness value
-        x = max(errors)
-        fitness = []
-        for e in errors:
-            fitness.append(x/e) #dividing max/e makes smaller errors end up with larger fitnesses
-        
-        mom = select_parent(fitness)
-        dad = select_parent(fitness)
+        momIndex = select_parent(fitness)
+        dadIndex = select_parent(fitness)
+
+        mom = structures[momIndex]
+        dad = structures[dadIndex]
         # make baby
         child = reproduce(mom, dad)
         # roll some chance to mutate
@@ -332,13 +338,15 @@ def generate_next_generation(lastGen, MSEs, N, L):
 
 def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epochs=500):
     # create first list of models
-    genepoolSize = 100
+    genepoolSize = 10
     currentGen = generate_initial_generation(N, L, genepoolSize)
-    
+    print("Gen1:", currentGen)
     #train a generation
-    while():
+    while(1):
         MSEs = train_generation(currentGen, trainingSet, evaluateSet, batchSize, verbose, epochs)
         currentGen = generate_next_generation(currentGen, MSEs, N, L)
+        print("Next Gen:", currentGen)
+        return
 
 ####################
 ##                ##
@@ -346,8 +354,4 @@ def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epo
 ##                ##
 ####################
 
-mom = [1,1,1,1,1]
-dad = [2,2,0,0,0]
-child = reproduce(dad, mom)
-print(child)
-print(handle_zeros(child))
+genetic_config(5,3, "dataset10k.mat", "dataset1k.mat", 250, 0, 200)
