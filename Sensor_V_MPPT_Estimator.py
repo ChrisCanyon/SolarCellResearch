@@ -37,7 +37,6 @@ def chunks(l, n):
 # saves model to file with name 'name'
 # TODO: Make loss, optimizer, and metrics save to file for a NN
 def save_model(model, name, layers, MSE):
-    print("Saving model:", name, "\nMSE:", MSE)
     # serialize model to JSON
     model_json = model.to_json()
     with open("./NNs/" + name+".json", "w") as json_file:
@@ -126,7 +125,7 @@ def getMSE(name):
     return MSE
 
 def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, verbose=0, epochs=1000):
-    data = sio.loadmat(evaluateSet)
+    data = sio.loadmat(trainingSet)
 
     X = numpy.array(data['inputs'])
     Y = numpy.array(data['labels'][0])
@@ -161,7 +160,6 @@ def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, 
             bestMSE = MSE
     
     avgMSE = totalMSE/(i+1)
-    print("Average MSE:", avgMSE)
     save_model(bestModel, name, layers, avgMSE)
     return bestModel
 
@@ -268,10 +266,14 @@ def reproduce(model1, model2):
 
 def train_generation(gen, trainingSet, evaluateSet, batchSize, verbose, epochs):
     print("Training generation")
+
     MSEs = []
+
     for i in range(len(gen)):
         trainFriendlyLayer = handle_zeros(gen[i])
-        MSEs.append(CVtrain(trainFriendlyLayer, trainingSet, evaluateSet, 5, "trash", batchSize, verbose, epochs))
+        CVtrain(trainFriendlyLayer, trainingSet, evaluateSet, 5, "trash", batchSize, verbose, epochs)
+        MSE = getMSE('trash')
+        MSEs.append(MSE)
     
     print("MSEs after training:", MSEs)
     return MSEs
@@ -291,13 +293,13 @@ def mutate(layers, N, L):
     return layers
 
 
+# TODO: make sure parents cant be selected twice?
 def select_parent(fitness):
-    print("Fitness:", fitness)
     total = sum(fitness)
 
-    chosen = random.randint(0, total)
-
-    for i in len(fitness):
+    chosen = random.randint(0, int(total)) # casting to int may cut off largest value but that is okay
+                                           # because the highest value is the worst NN
+    for i in range(len(fitness)):
         chosen = chosen - fitness[i]
         if chosen <= 0:
             return i
@@ -311,8 +313,9 @@ def generate_next_generation(lastGen, MSEs, N, L):
     # convert errors to some fitness value
     maxError = max(errors)
     fitness = []
-    for e in errors:
-        fitness.append(maxError/e) #dividing maxError/e makes smaller errors end up with larger fitness scores
+    for e in errors: #make sure i dont divide by zero
+        # possibly square to punish low values more
+        fitness.append(math.pow(maxError/e, 2)) #dividing maxError/e makes smaller errors end up with larger fitness scores
 
     # Save top X structures for next gen
     nextGen = structures[0:5]
@@ -342,11 +345,14 @@ def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epo
     currentGen = generate_initial_generation(N, L, genepoolSize)
     print("Gen1:", currentGen)
     #train a generation
-    while(1):
+    for i in range(10):
         MSEs = train_generation(currentGen, trainingSet, evaluateSet, batchSize, verbose, epochs)
+        totalMSE = 0
+        for j in range(len(MSEs)):
+            totalMSE += MSEs[j]
+        print("Gen {0} Average MSE: {1}".format(i, totalMSE/j))
         currentGen = generate_next_generation(currentGen, MSEs, N, L)
         print("Next Gen:", currentGen)
-        return
 
 ####################
 ##                ##
