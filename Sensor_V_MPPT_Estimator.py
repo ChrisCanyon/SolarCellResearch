@@ -1,8 +1,4 @@
-# TODO: make NN save and load from a folder in a folder called NN
-# TODO: ensure MSE is only calculated once per NN
-# TODO: make evaulate model give average
 # TODO: make genetic learn
-# TODO: 5-fold CV :retrain models to avoid local mins and get avg MSE over X trains
 
 import keras
 from keras.models import model_from_json
@@ -10,13 +6,12 @@ from keras.layers import Activation, Dense
 import scipy.io as sio
 import numpy
 import math
-from multiprocessing.dummy import Pool as ThreadPool 
-
+from multiprocessing.dummy import Pool as ThreadPool
+import random
 
 # my attempt to make structure generation easier to read
 # creates an array to represent a number with base N+1
 # numbers roll over to 1 because 1 node is required
-
 def array_increment(array, N):
     size = len(array)
     
@@ -34,79 +29,13 @@ def array_increment(array, N):
             array[size - 1 - i] += 1
             return
 
+# break l into n sized chunks
 def chunks(l, n):
-    """Yield successive n-sized chunks from l."""
     for i in range(0, len(l), n):
         yield l[i:i + n]
 
-def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, verbose=0, epochs=1000):
-    data = sio.loadmat(evaluateSet)
-
-    X = numpy.array(data['inputs'])
-    Y = numpy.array(data['labels'][0])
-    datasize = len(Y)
-    chunkSize = int(datasize/folds)
-    
-    if folds >= datasize:
-        print("Error in CVtrain. Dataset not larger enough for {0}-fold CV".format(folds))
-        return None
-    if chunkSize < batch:
-        print("Error in CVtrain. Batch size larger that chunk size for {0}-fold CV".format(folds))
-        return None
-
-    Xchunks = chunks(X, chunkSize)
-    Ychunks = chunks(Y, chunkSize)
-
-    #train model
-    bestModel = None
-    bestMSE = 1000
-    totalMSE = 0
-    for i in range(folds):
-        if verbose == 1:
-            print("Fold", i)
-
-        model = train_model(layers, next(Xchunks), next(Ychunks), batch, verbose, epochs)
-        MSE = evaluate_model(model, evaluateSet, 0)
-
-        totalMSE += MSE
-
-        if MSE < bestMSE:
-            bestModel = model
-            bestMSE = MSE
-    
-    avgMSE = totalMSE/(i+1)
-    print("Average MSE:", avgMSE)
-    save_model(bestModel, name, layers, avgMSE)
-    return bestModel
-
-
-# train_model creates a keras.Sequential() NN with network structure 'layers'
-# returns a trained model
-# Paramters:
-#  layers:   array of node lengths
-#  X, Y:     training data for use with model.fit
-#  batch:    batch_size
-#  verbose:  0 = no training output 
-#            1 = training output
-#  epochs:   number of epochs in model.fit
-#  folds:    number of folds for K-fold CV
-
-def train_model(layers, X, Y, batch=100, verbose=0, epochs=1000):
-    #create model
-    model = keras.Sequential()
-
-    model.add(Dense(layers[0], input_dim=2, activation='sigmoid'))
-    for nodes in layers[1:]:
-        model.add(Dense(nodes, activation='sigmoid'))
-    model.add(Dense(1))
-    
-    model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
-
-    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
-
-    return model
-
 # saves model to file with name 'name'
+# TODO: Make loss, optimizer, and metrics save to file for a NN
 def save_model(model, name, layers, MSE):
     print("Saving model:", name, "\nMSE:", MSE)
     # serialize model to JSON
@@ -125,8 +54,7 @@ def save_model(model, name, layers, MSE):
 
 # load_model loads a model with name 'name'
 # Returns a compiled model
-# TODO: Make loss, optimizer, and metrics optional input variables
-
+# TODO: Make loss, optimizer, and metrics input from file
 def load_model(name):
     json_file = open("./NNs/" + name + '.json', 'r')
     loaded_model_json = json_file.read()
@@ -180,10 +108,91 @@ def compare_saved_models(model1, model2):
     if MSE2 > MSE1:
         return 1
     return 0
+
+def sim(input, name):
+    try:
+        model = load_model(name)
+    except OSError as e:
+        print('model:', name, 'not found')
+        exit()
+
+    return model.predict(input)
+
+# returns the saved MSE saved for a NN
+def getMSE(name):
+    f = open("./NNs/"+name+"_MSE", 'r')
+    MSE = float(f.read())
+    f.close()
+    return MSE
+
+def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, verbose=0, epochs=1000):
+    data = sio.loadmat(evaluateSet)
+
+    X = numpy.array(data['inputs'])
+    Y = numpy.array(data['labels'][0])
+    datasize = len(Y)
+    chunkSize = int(datasize/folds)
+    
+    if folds >= datasize:
+        print("Error in CVtrain. Dataset not larger enough for {0}-fold CV".format(folds))
+        return None
+    if chunkSize < batch:
+        print("Error in CVtrain. Batch size larger that chunk size for {0}-fold CV".format(folds))
+        return None
+
+    Xchunks = chunks(X, chunkSize)
+    Ychunks = chunks(Y, chunkSize)
+
+    #train model
+    bestModel = None
+    bestMSE = 1000
+    totalMSE = 0
+    for i in range(folds):
+        if verbose == 1:
+            print("Fold", i)
+
+        model = train_model(layers, next(Xchunks), next(Ychunks), batch, verbose, epochs)
+        MSE = evaluate_model(model, evaluateSet, 0)
+
+        totalMSE += MSE
+
+        if MSE < bestMSE:
+            bestModel = model
+            bestMSE = MSE
+    
+    avgMSE = totalMSE/(i+1)
+    print("Average MSE:", avgMSE)
+    save_model(bestModel, name, layers, avgMSE)
+    return bestModel
+
+# train_model creates a keras.Sequential() NN with network structure 'layers'
+# returns a trained model
+# Paramters:
+#  layers:   array of node lengths
+#  X, Y:     training data for use with model.fit
+#  batch:    batch_size
+#  verbose:  0 = no training output 
+#            1 = training output
+#  epochs:   number of epochs in model.fit
+#  folds:    number of folds for K-fold CV
+def train_model(layers, X, Y, batch=100, verbose=0, epochs=1000):
+    #create model
+    model = keras.Sequential()
+
+    model.add(Dense(layers[0], input_dim=2, activation='sigmoid'))
+    for nodes in layers[1:]:
+        model.add(Dense(nodes, activation='sigmoid'))
+    model.add(Dense(1))
+    
+    model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
+
+    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
+
+    return model
+
 # searches through all possible layer node arrangments
 # for L layers with up to N nodes each
-
-def configure_model(N, L, trainingSet, evaluateSet, batchSize=100, verbose=0, epochs=500):
+def exhuastive_config(N, L, trainingSet, evaluateSet, batchSize=100, verbose=0, epochs=500):
     bestModel = None
     bestMSE = None
     bestLayers = None
@@ -214,21 +223,122 @@ def configure_model(N, L, trainingSet, evaluateSet, batchSize=100, verbose=0, ep
     save_model(bestModel, str(N)+'x'+str(L)+"optimalNN", bestLayers, bestMSE)
     return bestModel 
 
-def sim(input, name):
+# adds 0s to make layer arrays all the same size
+def append_zeros(layers, L):
+    x = len(layers)
+    for i in range(L - x):
+        layers.append(0)
+    return layers
+
+# removes dangling zeros from being the child of different depth NNs
+def handle_zeros(layers):
+    x = layers[:]
     try:
-        model = load_model(name)
-    except OSError as e:
-        print('model:', name, 'not found')
-        exit()
+        while(1):
+            x.remove(0)
+    except:
+        return x
 
-    return model.predict(input)
+# returns an array of layer arrays
+def generate_initial_generation(N, L, size):
+    generation = []
+    for i in range(size):
+        layers = []
+        # choose a depth
+        x = random.randint(1, L)
+        for j in range(x):
+            layers.append(random.randint(1, N))
+        layers = append_zeros(layers, L)
+        generation.append(layers)
 
-# returns the saved MSE for a NN
-def getMSE(name):
-    f = open("./NNs/"+name+"_MSE", 'r')
-    MSE = float(f.read())
-    f.close()
-    return MSE
+    return generation
+
+# model1 and model2 are same length
+def reproduce(model1, model2):
+    x = len(model1)
+
+    flipIndex = random.randint(0, x-1)
+
+    model3 = model2[:]
+
+    for i in range(flipIndex):
+        model3[i] = model1[i]
+    
+    return model3
+
+def train_generation(gen, trainingSet, evaluateSet, batchSize, verbose, epochs):
+    MSEs = []
+    for i in range(len(gen)):
+        trainFriendlyLayer = handle_zeros(gen[i])
+        MSEs.append(CVtrain(trainFriendlyLayer, trainingSet, evaluateSet, 5, "trash", batchSize, verbose, epochs))
+    
+    return MSEs
+
+# TODO: look into mutate options
+# currently just chooses a random index and changes the nodes to a random number
+def mutate(layers, N, L):
+    x = len(layers)
+
+    i = random.randint(0,x-1)
+
+    lower = 1 - layers[i] 
+    upper = N - layers[i]
+
+    layers[i] += random.randint(lower, upper)
+
+    return layers
+
+
+def select_parent(fitness):
+    print("Fitness:", fitness)
+    total = sum(fitness)
+
+    chosen = random.randint(0, total)
+
+    for i in len(fitness):
+        chosen = chosen - fitness[i]
+        if chosen <= 0:
+            return i
+    
+def generate_next_generation(lastGen, MSEs, N, L):
+    # sort MSEs and lastGen so they are in order of best MSE to worst
+    errors, structures = zip(*sorted(zip(MSEs, lastGen), key=lambda x: x[0], reverse=False))
+    errors = list(errors)
+    structures = list(structures)
+
+    # Save top X structures for next gen
+    nextGen = structures[0:5]
+
+    # loop to fill rest of the generation
+    x = len(MSEs)
+    for i in range(x - 5):
+        # get mom and dad
+        # convert errors to some fitness value
+        x = max(errors)
+        fitness = []
+        for e in errors:
+            fitness.append(x/e) #dividing max/e makes smaller errors end up with larger fitnesses
+        
+        mom = select_parent(fitness)
+        dad = select_parent(fitness)
+        # make baby
+        child = reproduce(mom, dad)
+        # roll some chance to mutate
+        if (random.randint(0,100) == 0):
+            child = mutate(child, N, L)
+        nextGen.append(child)
+
+    return nextGen
+
+def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epochs=500):
+    # create first list of models
+    genepoolSize = 100
+    currentGen = generate_initial_generation(N, L, genepoolSize)
+    
+    #train a generation
+    while():
+        MSEs = train_generation(currentGen, trainingSet, evaluateSet, batchSize, verbose, epochs)
+        currentGen = generate_next_generation(currentGen, MSEs, N, L)
 
 ####################
 ##                ##
@@ -236,4 +346,8 @@ def getMSE(name):
 ##                ##
 ####################
 
-model = configure_model(2,2, "dataset10k.mat", "dataset1k.mat")
+mom = [1,1,1,1,1]
+dad = [2,2,0,0,0]
+child = reproduce(dad, mom)
+print(child)
+print(handle_zeros(child))

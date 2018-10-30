@@ -1,1 +1,2 @@
-import keras;
+def mytest():
+    print("it worked")
