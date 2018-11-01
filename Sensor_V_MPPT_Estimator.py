@@ -1,4 +1,6 @@
 # TODO: make genetic learn
+# TODO: make computations capable of starting and stopping by saving current generation info and params
+# TODO: make threads safe
 
 import keras
 from keras.models import model_from_json
@@ -292,7 +294,6 @@ def mutate(layers, N, L):
 
     return layers
 
-
 # TODO: make sure parents cant be selected twice?
 def select_parent(fitness):
     total = sum(fitness)
@@ -303,7 +304,7 @@ def select_parent(fitness):
         chosen = chosen - fitness[i]
         if chosen <= 0:
             return i
-    
+    # TODO: dont kill all parent. compare against children first
 def generate_next_generation(lastGen, MSEs, N, L):
     # sort MSEs and lastGen so they are in order of best MSE to worst
     errors, structures = zip(*sorted(zip(MSEs, lastGen), key=lambda x: x[0], reverse=False))
@@ -333,7 +334,7 @@ def generate_next_generation(lastGen, MSEs, N, L):
         # make baby
         child = reproduce(mom, dad)
         # roll some chance to mutate
-        if (random.randint(0,100) == 0):
+        if (random.randint(0,100) == 0): #mutate more often 30%
             child = mutate(child, N, L)
         nextGen.append(child)
 
@@ -360,4 +361,15 @@ def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epo
 ##                ##
 ####################
 
-genetic_config(5,3, "dataset10k.mat", "dataset1k.mat", 250, 0, 200)
+
+layers = [20,18]
+trainingSet = "dataset100k"
+evaluateSet = "dataset10k"
+folds = 10
+name = "GeneticTrailRunResult"
+batch = 10
+verbose = 1
+epochs = 1000
+
+model = CVtrain(layers, trainingSet, evaluateSet, folds, name, batch, verbose, epochs)
+print("MSE:", getMSE(name))
