@@ -1,6 +1,5 @@
 # TODO: determine if batchsize can be higher for network config and still find best shape so that I can train faster
 # TODO: make sure input datasets are only read from disk once to reduce file io time
-# TODO: 
 
 import keras
 from keras.models import model_from_json
@@ -360,10 +359,11 @@ def generate_next_generation(lastGen, MSEs, N, L):
 def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epochs=500):
     # create first list of models
     genepoolSize = 25
+    maxGenerations = 100
     currentGen = generate_initial_generation(N, L, genepoolSize)
     print("Gen 0:", currentGen)
     #train a generation
-    for i in range(genepoolSize):
+    for i in range(maxGenerations):
         t0 = time.time()
         MSEs = train_generation(currentGen, trainingSet, evaluateSet, batchSize, verbose, epochs)
         t1 = time.time()
@@ -380,10 +380,52 @@ def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epo
 ##                ##
 ####################
 
+# Testing to see if epochs can be decreased and batch sized can be increased while genetic config still finds best config
+
+
+def sortByMSE(layers, MSEs):
+    errors, structures = zip(*sorted(zip(MSEs, layers), key=lambda x: x[0], reverse=False))
+    errors = list(errors)
+    structures = list(structures)
+
+    return structures
+
 N = 20
-L = 5
+L = 3
+generation = generate_initial_generation(N, L, 10)
+
 trainingSet = "dataset10k.mat"
 evaluateSet = "dataset1k.mat"
-genetic_config(N, L, trainingSet, evaluateSet)
 
+smallBatch = 100
+bigBatch = 1000
+
+smallEpochs = 200
+bigEpochs = 500
+
+print("Layers options sorted by MSE")
+
+# with const num epochs
+smallBatchMSEs = train_generation(generation, trainingSet, evaluateSet, smallBatch, 0, bigEpochs)
+bigBatchMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, bigEpochs)
+
+print("With num epochs: ", bigEpochs)
+print("\t", smallBatch, "batchSize:", sortByMSE(generation, smallBatchMSEs))
+print("\t", bigBatch, "batchSize:", sortByMSE(generation, bigBatchMSEs))
+
+#with const batchSize
+smallEpochsMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, smallEpochs)
+bigEpochsMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, bigEpochs)
+
+print("With batchSize: ", bigBatch)
+print("\t", smallEpochs,"epochs:", sortByMSE(generation, smallEpochsMSEs))
+print("\t", bigEpochs, "epochs:", sortByMSE(generation, bigEpochsMSEs))
+
+# big big vs small small
+smallMSEs = train_generation(generation, trainingSet, evaluateSet, smallBatch, 0, smallEpochs)
+bigMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, bigEpochs)
+
+print("Large vs Small")
+print("\tSmall:", sortByMSE(generation, smallMSEs))
+print("\tLarge:", sortByMSE(generation, bigMSEs))
 
