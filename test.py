@@ -1,2 +1,2 @@
-def mytest():
-    print("it worked")
+def ttt():
+  print("TTT")

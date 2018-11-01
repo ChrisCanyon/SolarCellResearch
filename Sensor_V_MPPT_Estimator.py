@@ -1,15 +1,16 @@
-# TODO: make genetic learn
 # TODO: make computations capable of starting and stopping by saving current generation info and params
-# TODO: make threads safe
+# TODO: determine if batchsize can be higher for network config and still find best shape so that I can train faster
+# TODO: make sure input datasets are only read from disk once to reduce file io time
 
 import keras
 from keras.models import model_from_json
 from keras.layers import Activation, Dense
+import tensorflow as tf
 import scipy.io as sio
 import numpy
 import math
-from multiprocessing.dummy import Pool as ThreadPool
 import random
+import time
 
 # my attempt to make structure generation easier to read
 # creates an array to represent a number with base N+1
@@ -41,16 +42,16 @@ def chunks(l, n):
 def save_model(model, name, layers, MSE):
     # serialize model to JSON
     model_json = model.to_json()
-    with open("./NNs/" + name+".json", "w") as json_file:
+    with open("./NNs/" + name + ".json", "w") as json_file:
         json_file.write(model_json)
     # serialize weights to HDF5
-    model.save_weights(name+".h5")
+    model.save_weights("./NNs/" + name+ ".h5")
     # save layer structure
-    with open("./NNs/" + name+"_structure", "w") as structure_file:
+    with open("./NNs/" + name + "_structure", "w") as structure_file:
         for node in layers:
             structure_file.write(str(node) + ' ')
     # save MSE
-    with open("./NNs/" + name+"_MSE" , 'w') as f:
+    with open("./NNs/" + name + "_MSE" , 'w') as f:
         f.write("%f" % MSE)
 
 # load_model loads a model with name 'name'
@@ -126,6 +127,7 @@ def getMSE(name):
     f.close()
     return MSE
 
+# TODO: make the evaluation use the chunks not used to train instead of input evaluationSet
 def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, verbose=0, epochs=1000):
     data = sio.loadmat(trainingSet)
 
@@ -175,6 +177,7 @@ def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, 
 #            1 = training output
 #  epochs:   number of epochs in model.fit
 #  folds:    number of folds for K-fold CV
+# TODO: add 'shuffle' to model.fit and test
 def train_model(layers, X, Y, batch=100, verbose=0, epochs=1000):
     #create model
     model = keras.Sequential()
@@ -267,8 +270,6 @@ def reproduce(model1, model2):
     return model3
 
 def train_generation(gen, trainingSet, evaluateSet, batchSize, verbose, epochs):
-    print("Training generation")
-
     MSEs = []
 
     for i in range(len(gen)):
@@ -281,6 +282,10 @@ def train_generation(gen, trainingSet, evaluateSet, batchSize, verbose, epochs):
     return MSEs
 
 # TODO: look into mutate options
+# Mutate Option:
+# Add/subtract layer
+# Update more than 1 node
+# Call itself recursively rarely for major mutations
 # currently just chooses a random index and changes the nodes to a random number
 def mutate(layers, N, L):
     x = len(layers)
@@ -291,6 +296,10 @@ def mutate(layers, N, L):
     upper = N - layers[i]
 
     layers[i] += random.randint(lower, upper)
+
+    # mutate more rarely
+    if (random.randint(0,100) < 33):
+        return mutate(layers, N, L)
 
     return layers
 
@@ -304,7 +313,8 @@ def select_parent(fitness):
         chosen = chosen - fitness[i]
         if chosen <= 0:
             return i
-    # TODO: dont kill all parent. compare against children first
+          
+# TODO: dont kill all parent. compare against children first 
 def generate_next_generation(lastGen, MSEs, N, L):
     # sort MSEs and lastGen so they are in order of best MSE to worst
     errors, structures = zip(*sorted(zip(MSEs, lastGen), key=lambda x: x[0], reverse=False))
@@ -319,12 +329,13 @@ def generate_next_generation(lastGen, MSEs, N, L):
         fitness.append(math.pow(maxError/e, 2)) #dividing maxError/e makes smaller errors end up with larger fitness scores
 
     # Save top X structures for next gen
-    nextGen = structures[0:5]
+    # TODO: make this based on population size
+    nextGen = structures[0:2]
 
     # loop to fill rest of the generation
     x = len(MSEs)
-    for i in range(x - 5):
-
+    i = 0
+    for i in range(x - 2):
         # get mom and dad
         momIndex = select_parent(fitness)
         dadIndex = select_parent(fitness)
@@ -334,24 +345,32 @@ def generate_next_generation(lastGen, MSEs, N, L):
         # make baby
         child = reproduce(mom, dad)
         # roll some chance to mutate
-        if (random.randint(0,100) == 0): #mutate more often 30%
+
+        if (random.randint(0,100) < 25):
             child = mutate(child, N, L)
+        
+        # avoid duplicates
+        if child in nextGen:
+            child = mutate(child, N, L)
+        
         nextGen.append(child)
 
     return nextGen
 
 def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epochs=500):
     # create first list of models
-    genepoolSize = 10
+    genepoolSize = 25
     currentGen = generate_initial_generation(N, L, genepoolSize)
-    print("Gen1:", currentGen)
+    print("Gen 0:", currentGen)
     #train a generation
-    for i in range(10):
+    for i in range(genepoolSize):
+        t0 = time.time()
         MSEs = train_generation(currentGen, trainingSet, evaluateSet, batchSize, verbose, epochs)
+        t1 = time.time()
         totalMSE = 0
         for j in range(len(MSEs)):
             totalMSE += MSEs[j]
-        print("Gen {0} Average MSE: {1}".format(i, totalMSE/j))
+        print("Gen {0} Train time: {1} minutes, Average MSE: {2}".format(i, (t1-t0)/60, totalMSE/j))
         currentGen = generate_next_generation(currentGen, MSEs, N, L)
         print("Next Gen:", currentGen)
 
@@ -361,15 +380,8 @@ def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epo
 ##                ##
 ####################
 
-
-layers = [20,18]
-trainingSet = "dataset100k"
-evaluateSet = "dataset10k"
-folds = 10
-name = "GeneticTrailRunResult"
-batch = 10
-verbose = 1
-epochs = 1000
-
-model = CVtrain(layers, trainingSet, evaluateSet, folds, name, batch, verbose, epochs)
-print("MSE:", getMSE(name))
+N = 20
+L = 5
+trainingSet = "dataset10k.mat"
+evaluateSet = "dataset1k.mat"
+genetic_config(N, L, trainingSet, evaluateSet)
