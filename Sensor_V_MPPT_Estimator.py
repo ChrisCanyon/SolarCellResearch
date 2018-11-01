@@ -1,6 +1,6 @@
+# TODO: make computations capable of starting and stopping by saving current generation info and params
 # TODO: determine if batchsize can be higher for network config and still find best shape so that I can train faster
 # TODO: make sure input datasets are only read from disk once to reduce file io time
-# TODO: 
 
 import keras
 from keras.models import model_from_json
@@ -313,9 +313,8 @@ def select_parent(fitness):
         chosen = chosen - fitness[i]
         if chosen <= 0:
             return i
-    
-    # TODO: no repeats including after 
-
+          
+# TODO: dont kill all parent. compare against children first 
 def generate_next_generation(lastGen, MSEs, N, L):
     # sort MSEs and lastGen so they are in order of best MSE to worst
     errors, structures = zip(*sorted(zip(MSEs, lastGen), key=lambda x: x[0], reverse=False))
@@ -346,6 +345,7 @@ def generate_next_generation(lastGen, MSEs, N, L):
         # make baby
         child = reproduce(mom, dad)
         # roll some chance to mutate
+
         if (random.randint(0,100) < 25):
             child = mutate(child, N, L)
         
@@ -385,5 +385,3 @@ L = 5
 trainingSet = "dataset10k.mat"
 evaluateSet = "dataset1k.mat"
 genetic_config(N, L, trainingSet, evaluateSet)
-
-
