@@ -1,7 +1,7 @@
 # TODO: determine if batchsize can be higher for network config and still find best shape so that I can train faster
 # TODO: make sure input datasets are only read from disk once to reduce file io time
-# TODO: 
 
+import os
 import keras
 from keras.models import model_from_json
 from keras.layers import Activation, Dense
@@ -156,15 +156,15 @@ def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, 
 
         model = train_model(layers, next(Xchunks), next(Ychunks), batch, verbose, epochs)
         MSE = evaluate_model(model, evaluateSet, 0)
-
         totalMSE += MSE
 
         if MSE < bestMSE:
             bestModel = model
-            bestMSE = MSE
+            bestMSE = MSE    
     
     avgMSE = totalMSE/(i+1)
     save_model(bestModel, name, layers, avgMSE)
+    keras.backend.clear_session()
     return bestModel
 
 # train_model creates a keras.Sequential() NN with network structure 'layers'
@@ -303,7 +303,6 @@ def mutate(layers, N, L):
 
     return layers
 
-# TODO: make sure parents cant be selected twice?
 def select_parent(fitness):
     total = sum(fitness)
 
@@ -335,7 +334,6 @@ def generate_next_generation(lastGen, MSEs, N, L):
 
     # loop to fill rest of the generation
     x = len(MSEs)
-    i = 0
     for i in range(x - 2):
         # get mom and dad
         momIndex = select_parent(fitness)
@@ -384,6 +382,8 @@ N = 20
 L = 5
 trainingSet = "dataset10k.mat"
 evaluateSet = "dataset1k.mat"
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
+
 genetic_config(N, L, trainingSet, evaluateSet)
 
 
