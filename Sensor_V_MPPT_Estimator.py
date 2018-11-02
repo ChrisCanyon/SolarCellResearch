@@ -1,9 +1,12 @@
 from library.config.exhaustive import *
 from library.config.genetic import *
 from library.mio import *
+import scipy.io as sio
 
-print("Exhausting")
-exhuastive_config(2, 3, "dataset10k.mat", "dataset1k.mat", batchSize=1000, verbose=0, epochs=100)
+#genetic_config(100, 5, "dataset10k.mat", "dataset1k.mat")
 
-print("Geneticing")
-genetic_config(2, 3, "dataset10k.mat", "dataset1k.mat", batchSize=1000, verbose=0, epochs=100)
+trainingSet = sio.loadmat("dataset100k.mat")
+evaluateSet = sio.loadmat("dataset10k.mat")
+
+CVtrain([98,9], trainingSet ,evaluateSet, folds=10, name="Genetic2", batch=10, verbose=0, epochs=1000)
+print(getMSE('Genetic2'))
