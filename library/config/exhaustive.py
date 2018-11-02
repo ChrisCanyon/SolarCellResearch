@@ -1,4 +1,4 @@
-from library import *
+from library.mio import *
 import scipy.io as sio
 
 # my attempt to make structure generation easier to read
@@ -27,7 +27,6 @@ def exhuastive_config(N, L, trainingSetFile, evaluateSetFile, batchSize=100, ver
     trainingSet = sio.loadmat(trainingSetFile)
     evaluateSet = sio.loadmat(evaluateSetFile)
 
-    bestModel = None
     bestMSE = None
     bestLayers = None
 
