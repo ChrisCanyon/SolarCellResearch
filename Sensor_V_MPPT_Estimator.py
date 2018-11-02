@@ -1,5 +1,4 @@
 # TODO: determine if batchsize can be higher for network config and still find best shape so that I can train faster
-# TODO: make sure input datasets are only read from disk once to reduce file io time
 
 import os
 import keras
@@ -12,25 +11,8 @@ import math
 import random
 import time
 
-# my attempt to make structure generation easier to read
-# creates an array to represent a number with base N+1
-# numbers roll over to 1 because 1 node is required
-def array_increment(array, N):
-    size = len(array)
-    
-    for i in range(size):
-        if array[size - 1 - i] == N:
-            #check if done
-            if (size-i-1) == 0:
-                #done
-                return
-            else:
-                #else roll over to 0
-                array[size - 1 - i] = 1
-        else:
-            # add one and done
-            array[size - 1 - i] += 1
-            return
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' #Disable tensorflow info logs
+
 
 # break l into n sized chunks
 def chunks(l, n):
@@ -69,9 +51,7 @@ def load_model(name):
     return model
 
 # evaluate_model calculates the MSE of model on testdatafile
-def evaluate_model(model, testdatafile, verbose=0):
-    testdata = sio.loadmat(testdatafile)
-
+def evaluate_model(model, testdata, verbose=0):
     testX = numpy.array(testdata['inputs'])
     testY = numpy.array(testdata['labels'][0])
 
@@ -87,7 +67,7 @@ def evaluate_model(model, testdatafile, verbose=0):
     MSE = (totalError/i)
 
     if verbose==1:
-        print('MSE for test data: {0}, {1}'.format(testdatafile, MSE))
+        print('MSE:', MSE)
     return MSE
 
 # compares 2 models against the same dataset
@@ -129,10 +109,8 @@ def getMSE(name):
 
 # TODO: make the evaluation use the chunks not used to train instead of input evaluationSet
 def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, verbose=0, epochs=1000):
-    data = sio.loadmat(trainingSet)
-
-    X = numpy.array(data['inputs'])
-    Y = numpy.array(data['labels'][0])
+    X = numpy.array(trainingSet['inputs'])
+    Y = numpy.array(trainingSet['labels'][0])
     datasize = len(Y)
     chunkSize = int(datasize/folds)
     
@@ -165,7 +143,7 @@ def CVtrain(layers, trainingSet, evaluateSet, folds=1, name="trash", batch=100, 
     avgMSE = totalMSE/(i+1)
     save_model(bestModel, name, layers, avgMSE)
     keras.backend.clear_session()
-    return bestModel
+    return #TODO: either reload file and return or just expect calling functions to load data as they need it OR return MSE
 
 # train_model creates a keras.Sequential() NN with network structure 'layers'
 # returns a trained model
@@ -192,39 +170,6 @@ def train_model(layers, X, Y, batch=100, verbose=0, epochs=1000):
     model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
 
     return model
-
-# searches through all possible layer node arrangments
-# for L layers with up to N nodes each
-def exhuastive_config(N, L, trainingSet, evaluateSet, batchSize=100, verbose=0, epochs=500):
-    bestModel = None
-    bestMSE = None
-    bestLayers = None
-
-    for i in range(L):
-        layers = [1 for X in range(i+1)] #create array of layers with 1 node each
-
-        # formula for possible sctructures with N nodes and i layers
-        # used so array_increment goes through every possible option
-        possibleStructures = int(math.pow(N,i+1) - 1)
-        for j in range(possibleStructures):
-            array_increment(layers, N) # assuming all 1 node layers is bad
-            print("Training with layers:", layers)
-            model = CVtrain(layers, trainingSet, evaluateSet, 5, 'test', batchSize, verbose, epochs)
-            MSE = getMSE('test')
-            if bestModel == None:
-                bestModel = model
-                bestMSE = MSE
-                bestLayers = layers
-
-            if  bestMSE > MSE:
-                bestModel = model
-                bestMSE = MSE
-                bestLayers = layers
-
-
-    print("Best model for N:", N, "L:", L, "\nMSE:", bestMSE, "\nlayers:", bestLayers)
-    save_model(bestModel, str(N)+'x'+str(L)+"optimalNN", bestLayers, bestMSE)
-    return bestModel 
 
 # adds 0s to make layer arrays all the same size
 def append_zeros(layers, L):
@@ -355,11 +300,15 @@ def generate_next_generation(lastGen, MSEs, N, L):
 
     return nextGen
 
-def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epochs=500):
+def genetic_config(N, L, trainingSetFile, evaluateSetFile, batchSize=250, verbose=0, epochs=500):
     # create first list of models
     genepoolSize = 25
     currentGen = generate_initial_generation(N, L, genepoolSize)
     print("Gen 0:", currentGen)
+
+    trainingSet = sio.loadmat(trainingSetFile)
+    evaluateSet = sio.loadmat(evaluateSetFile)
+
     #train a generation
     for i in range(genepoolSize):
         t0 = time.time()
@@ -378,12 +327,5 @@ def genetic_config(N, L, trainingSet, evaluateSet, batchSize=250, verbose=0, epo
 ##                ##
 ####################
 
-N = 20
-L = 5
-trainingSet = "dataset10k.mat"
-evaluateSet = "dataset1k.mat"
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' 
-
-genetic_config(N, L, trainingSet, evaluateSet)
-
+# exhuastive_config(2, 3, "dataset10k.mat", "dataset1k.mat", batchSize=1000, verbose=0, epochs=100)
 
