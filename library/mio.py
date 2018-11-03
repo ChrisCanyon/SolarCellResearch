@@ -12,12 +12,7 @@ import time
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '1' #Disable tensorflow info logs
 
-# break l into n sized chunks
-def chunks(l, n):
-    for i in range(0, len(l), n):
-        yield l[i:i + n]
-
-
+# my version of sklearn's Kfold
 def Kfold(X,Y, folds):
     dataSize = len(X)
     foldSize = int(dataSize/folds)
@@ -25,26 +20,32 @@ def Kfold(X,Y, folds):
     for i in range(0, dataSize, foldSize):
         X_train = X[i:i+foldSize]
         Y_train = Y[i:i+foldSize]
-        X_evaluate = X[0:i] + X[(i+foldSize):dataSize]
-        Y_evaluate = X[0:i] + Y[(i+foldSize):dataSize]
+        X_evaluate = numpy.array(list(X[0:i]) + list(X[(i+foldSize):dataSize]))
+        Y_evaluate = numpy.array(list(Y[0:i]) + list(Y[(i+foldSize):dataSize]))
         yield (X_train, Y_train, X_evaluate, Y_evaluate)
 
 # saves model to file with name 'name'
+# allows partial saves so CVtrain can use keras.backend.clear_session()
 # TODO: Make loss, optimizer, and metrics save to file for a NN
-def save_model(model, name, layers, MSE):
-    # serialize model to JSON
-    model_json = model.to_json()
-    with open("./NNs/" + name + ".json", "w") as json_file:
-        json_file.write(model_json)
-    # serialize weights to HDF5
-    model.save_weights("./NNs/" + name+ ".h5")
-    # save layer structure
-    with open("./NNs/" + name + "_structure", "w") as structure_file:
-        for node in layers:
-            structure_file.write(str(node) + ' ')
-    # save MSE
-    with open("./NNs/" + name + "_MSE" , 'w') as f:
-        f.write("%f" % MSE)
+def save_model(name, model = None, layers = None, MSE = None):
+    if model != None:
+        # serialize model to JSON
+        model_json = model.to_json()
+        with open("./NNs/" + name + ".json", "w") as json_file:
+            json_file.write(model_json)
+        # serialize weights to HDF5
+        model.save_weights("./NNs/" + name+ ".h5")
+    
+    if layers != None:
+        # save layer structure
+        with open("./NNs/" + name + "_structure", "w") as structure_file:
+            for node in layers:
+                structure_file.write(str(node) + ' ')
+    
+    if MSE != None:
+        # save MSE
+        with open("./NNs/" + name + "_MSE" , 'w') as f:
+            f.write("%f" % MSE)
 
 # load_model loads a model with name 'name'
 # Returns a compiled model
@@ -116,7 +117,6 @@ def getMSE(name):
     f.close()
     return MSE
 
-# TODO: make the evaluation use the chunks not used to train instead of input evaluationSet
 def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, epochs=1000):
     X = numpy.array(trainingSet['inputs'])
     Y = numpy.array(trainingSet['labels'][0])
@@ -149,14 +149,14 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
         model = train_model(layers, X_train, Y_train, batch, verbose, epochs)
         MSE = evaluate_model(model, X_eval, Y_eval, 0)
         totalMSE += MSE
-
+        avgMSE = totalMSE/(i+1)
         if MSE < bestMSE:
             bestModel = model
-            bestMSE = MSE    
-    
-    avgMSE = totalMSE/(i+1)
-    save_model(bestModel, name, layers, avgMSE)
-    keras.backend.clear_session()
+            bestMSE = MSE
+            save_model(name, bestModel)
+        keras.backend.clear_session()
+
+    save_model(name, model=None, layers=layers, MSE=avgMSE)
     return #TODO: either reload model from file and return or just expect calling functions to load data as they need it OR return MSE
 
 # train_model creates a keras.Sequential() NN with network structure 'layers'
