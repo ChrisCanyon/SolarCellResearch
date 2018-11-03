@@ -23,9 +23,8 @@ def array_increment(array, N):
 
 # searches through all possible layer node arrangments
 # for L layers with up to N nodes each
-def exhuastive_config(N, L, trainingSetFile, evaluateSetFile, batchSize=100, verbose=0, epochs=500):
+def exhuastive_config(N, L, trainingSetFile, batchSize=100, verbose=0, epochs=500):
     trainingSet = sio.loadmat(trainingSetFile)
-    evaluateSet = sio.loadmat(evaluateSetFile)
 
     bestMSE = None
     bestLayers = None
@@ -39,7 +38,7 @@ def exhuastive_config(N, L, trainingSetFile, evaluateSetFile, batchSize=100, ver
         for j in range(possibleStructures):
             array_increment(layers, N) # assuming all 1 node layers is bad
             print("Training with layers:", layers)
-            CVtrain(layers, trainingSet, evaluateSet, 5, 'test', batchSize, verbose, epochs)
+            CVtrain(layers, trainingSet, 5, 'test', batchSize, verbose, epochs)
             MSE = getMSE('test')
             if bestMSE == None:
                 bestMSE = MSE
@@ -48,7 +47,6 @@ def exhuastive_config(N, L, trainingSetFile, evaluateSetFile, batchSize=100, ver
             if  bestMSE > MSE:
                 bestMSE = MSE
                 bestLayers = layers
-
 
     print("Best model for N:", N, "L:", L, "\nMSE:", bestMSE, "\nlayers:", bestLayers)
     return bestLayers 

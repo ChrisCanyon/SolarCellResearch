@@ -1,9 +1,7 @@
 from library.config.exhaustive import *
 from library.config.genetic import *
 from library.mio import *
+import scipy.io as sio
 
-print("Exhausting")
-exhuastive_config(2, 3, "dataset10k.mat", "dataset1k.mat", batchSize=1000, verbose=0, epochs=100)
+print(genetic_config(20, 5, "datasets/N3dataset10k.mat", 25))
 
-print("Geneticing")
-genetic_config(2, 3, "dataset10k.mat", "dataset1k.mat", batchSize=1000, verbose=0, epochs=100)
