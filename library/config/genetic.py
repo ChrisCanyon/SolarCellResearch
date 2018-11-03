@@ -74,7 +74,7 @@ def mutate(layers, N, L, force=False):
     if (random.randint(0,100) < 33):
         return mutate(layers, N, L)
 
-    return append_zeros(handle_zeros(layers), L)
+    return layers
 
 # how im using fitness scores
 def select_parent(fitness, totalFitness):
@@ -118,19 +118,22 @@ def generate_next_generation(lastGen, MSEs, N, L, populationSize):
 
         # make baby
         children = reproduce(mom, dad)
-        child1 = children[0]
+        child1 = children[0] #TODO: handle children in parallel
         child2 = children[1]
 
-        mutate(child1, N, L)
-        mutate(child2, N, L)
+        child1 = mutate(child1, N, L)
+        child2 = mutate(child2, N, L)
         # avoid duplicates
         if child1 in nextGen:
             child1 = mutate(child1, N, L, force=True)
         if child2 in nextGen:
-            child2 = mutate(child1, N, L, force=True)
+            child2 = mutate(child2, N, L, force=True)
         
-        nextGen.append(child1)
-        nextGen.append(child2)
+        # Remove 0 node layers between non 0 node layers: [10,0,10] -> [10,10,0]
+        formatedChild1 = append_zeros(handle_zeros(child1), L) # TODO: look into more efficient operations 
+        formatedChild2 = append_zeros(handle_zeros(child2), L)
+        nextGen.append(formatedChild1)
+        nextGen.append(formatedChild2)
 
     return nextGen
 
@@ -180,4 +183,3 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         print("Next Gen:", currentGen)
     
     return bestStructure
-

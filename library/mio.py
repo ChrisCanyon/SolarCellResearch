@@ -136,7 +136,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
     bestModel = None
     bestMSE = 1000
     totalMSE = 0
-    for i in range(folds):
+    for i in range(folds):  #TODO: parallelize?
         if verbose == 1:
             print("Fold", i)
 
@@ -146,7 +146,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
         X_eval = foldedData[2]
         Y_eval = foldedData[3]
 
-        model = train_model(layers, X_train, Y_train, batch, verbose, epochs)
+        model = train_model(layers, X_train, Y_train, batch, 0, epochs)
         MSE = evaluate_model(model, X_eval, Y_eval, 0)
         totalMSE += MSE
         avgMSE = totalMSE/(i+1)
@@ -154,7 +154,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
             bestModel = model
             bestMSE = MSE
             save_model(name, bestModel)
-        keras.backend.clear_session()
+        keras.backend.clear_session() #Clearing sessions improves performance over multipe model trains
 
     save_model(name, model=None, layers=layers, MSE=avgMSE)
     return #TODO: either reload model from file and return or just expect calling functions to load data as they need it OR return MSE

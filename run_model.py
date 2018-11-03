@@ -1,7 +1,9 @@
-from library.test import *
-from Sensor_V_MPPT_Estimator import *
+from library.config.genetic import *
 
-ttt()
+for i in range(100):
+    print(mutate([16, 17, 0, 0, 10], 10, 5))
+
+
 
 '''
 
