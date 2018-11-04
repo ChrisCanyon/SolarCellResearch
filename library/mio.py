@@ -152,7 +152,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
 
         MSE = evaluate_model(model, X_eval, Y_eval, 0)
         if verbose==1:
-            t0 = time.time()
+            t1 = time.time()
             print("Fold {0} Train time: {1} minutes, MSE: {2}".format(i, (t1-t0)/60, MSE))
 
         totalMSE += MSE
