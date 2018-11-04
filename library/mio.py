@@ -146,16 +146,23 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
         X_eval = foldedData[2]
         Y_eval = foldedData[3]
 
+        if verbose==1:
+            t0 = time.time()
         model = train_model(layers, X_train, Y_train, batch, 0, epochs)
+
         MSE = evaluate_model(model, X_eval, Y_eval, 0)
+        if verbose==1:
+            t0 = time.time()
+            print("Fold {0} Train time: {1} minutes, MSE: {2}".format(i, (t1-t0)/60, MSE))
+
         totalMSE += MSE
-        avgMSE = totalMSE/(i+1)
         if MSE < bestMSE:
             bestModel = model
             bestMSE = MSE
             save_model(name, bestModel)
         keras.backend.clear_session() #Clearing sessions improves performance over multipe model trains
 
+    avgMSE = totalMSE/folds
     save_model(name, model=None, layers=layers, MSE=avgMSE)
     return #TODO: either reload model from file and return or just expect calling functions to load data as they need it OR return MSE
 
