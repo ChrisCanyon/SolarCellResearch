@@ -166,7 +166,7 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
             minMSE = genMinMSE
             bestStructure = currentGen[MSEs.index(genMinMSE)]
 
-        if (genMinMSE - minMSE) < .05: #generation didnt improve enough
+        if (genMinMSE - minMSE) < .01: #generation didnt improve enough
             stop = stop + 1            
         else: #generation improved enough to keep going. reset stop condition
             stop = 0
