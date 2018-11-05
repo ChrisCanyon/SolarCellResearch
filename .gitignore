@@ -1,9 +1,11 @@
 
 *.asv
 Notes
-NNs/trash.h5
-NNs/trash.h5
+NNs/trash_MSE
 NNs/trash.h5
 NNs/trash.json
-NNs/trash.json
 NNs/trash.h5
+NNs/test_MSE
+NNs/test.h5
+NNs/test.json
+NNs/test.h5
