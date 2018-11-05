@@ -4,7 +4,7 @@ from library.mio import *
 import scipy.io as sio
 
 
-N = 6
+N = 7
 
 TrainFile = "datasets/N" + str(N) + "dataset10k.mat"
 EvalFile = "datasets/N" + str(N) + "dataset100k.mat"
