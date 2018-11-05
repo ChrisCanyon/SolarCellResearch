@@ -188,6 +188,6 @@ def train_model(layers, X, Y, batch=100, verbose=0, epochs=1000):
     
     model.compile(loss='mean_squared_error', optimizer='sgd', metrics=['accuracy'])
 
-    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose)
+    model.fit(X, Y, epochs=epochs, batch_size=batch, verbose=verbose, shuffle=True)
 
     return model
