@@ -1,9 +1,10 @@
+%{
 sunny_array_size = 1;
 cloudy_array_size = 1;
 
 output = [];
 
-parfor x = 100:1000
+parfor (x = 0:100,8)
     temp = x;
     irrad = 100;
     irrad_sunny = irrad;
@@ -48,7 +49,7 @@ parfor x = 100:1000
     X = sprintf('temp: %d irrad cloudy: %d',temp, irrad);
     disp(X);
 end
-%{
+
 for i = 1:sunny_array_size
     plot(V, solar_array_sunny(i).P);
     figure

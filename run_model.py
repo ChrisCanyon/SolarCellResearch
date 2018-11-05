@@ -1,4 +1,4 @@
-from library.config.genetic import *
+from library.config.CVtrain import *
 
 for i in range(100):
     print(mutate([16, 17, 0, 0, 10], 10, 5))

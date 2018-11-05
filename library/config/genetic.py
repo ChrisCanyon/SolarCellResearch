@@ -1,7 +1,7 @@
 # TODO: determine if batchsize can be higher for genetic_config and still find best shape so that I can train faster
 # TODO: determine if epochs can be lower for genetic_config and still find best shape so that I can train faster
 
-from library.mio import *
+from library.CVtrain import *
 import scipy.io as sio
 from math import ceil
 
