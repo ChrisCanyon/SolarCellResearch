@@ -1,4 +1,4 @@
-from library.mio import *
+from library.CVtrain import *
 import scipy.io as sio
 
 # my attempt to make structure generation easier to read
