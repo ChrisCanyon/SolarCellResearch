@@ -147,8 +147,9 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
 
     minMSE = None
     bestStructure = None
+    accuracy = .01
     stop = 0
-
+    first = True
     #train a generation
     for i in range(generations):
         t0 = time.time()
@@ -166,17 +167,25 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
             minMSE = genMinMSE
             bestStructure = currentGen[MSEs.index(genMinMSE)]
 
-        if (genMinMSE - minMSE) < .01: #generation didnt improve enough
+        if (bestStructure == currentGen[MSEs.index(genMinMSE)]): #generation has same best structure
             stop = stop + 1            
-        else: #generation improved enough to keep going. reset stop condition
+        else: #new best found. reset stop condition
             stop = 0
 
+        if not first and ((genMinMSE - minMSE) < accuracy): #generation didnt improve enough
+            if(epochs < 800):
+                print("Decreasing batch size")
+                epochs = epochs + 100 #increase training strength
+                accuracy = accuracy * .75
+
+        # update stop condition variables
+        first = False
         if genMinMSE < minMSE:
             minMSE = genMinMSE
-            bestStructure = currentGen[MSEs.index(genMinMSE)]
+        bestStructure = currentGen[MSEs.index(genMinMSE)]
 
-        if stop == 4: #if improvements are not enough for 3 generations in a row, stop
-            print("Stopping due to plateauing")
+        if stop == 4: #if same structure wins for 4 generations in a row, stop
+            print("Alpha structure found")
             return bestStructure
  
         currentGen = generate_next_generation(currentGen, MSEs, N, L, populationSize)

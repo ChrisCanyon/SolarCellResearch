@@ -1,8 +1,8 @@
-function [inputs, labels] = generateDataset(cellsPerSensor,s)
+function [inputs, labels] = generateDataset(cellsPerSensor,s, threadPool)
     inputs = zeros(s,2);
     labels = [];
 
-    parfor (i = 1:s, 8)
+    parfor (i = 1:s, threadPool)
         avgTemp = 0;
         avgIrrad = 0;
         temp = 50*rand; %look into making temp range evenly across the board
@@ -24,8 +24,6 @@ function [inputs, labels] = generateDataset(cellsPerSensor,s)
         %find real MPPT for sensor
         [~,I] = max(P_total);
         V_maxP = cell.V(I);
-
-        disp(size([avgTemp, avgIrrad]));
 
         %insert data into array
         inputs(i,:) = [avgTemp, avgIrrad];
