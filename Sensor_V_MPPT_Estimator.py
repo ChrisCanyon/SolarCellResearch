@@ -3,7 +3,7 @@ from library.config.genetic import *
 from library.CVtrain import *
 import scipy.io as sio
 
-datasets = [16, 20, 25, 31, 39, 49, 61, 76, 95]
+datasets = [7, 8, 9, 10, 11,16, 20, 25, 31, 39, 49, 61, 76, 95]
 for N in datasets:
     t0 = time.time()
 

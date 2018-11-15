@@ -3,23 +3,29 @@ from library.config.genetic import *
 from library.CVtrain import *
 import scipy.io as sio
 
-condensedOutput = [[18, 18, 4, 6, 0], [20, 3, 10, 0, 0], [17, 16, 14, 0, 0], [20, 14, 5, 0, 0], [19, 20, 9, 0, 0], [20, 2, 11, 0, 0], [19, 4, 13, 7, 0], [16, 20, 6, 0, 0], [17, 9, 0, 0, 0], [19, 5, 4, 4, 0], [18, 7, 10, 12, 0], [19, 17, 10, 0, 0], [20, 8, 7, 0, 0], [20, 3, 6, 0, 0], [13, 8, 12, 0, 0], [20, 19, 0, 0, 0], [19, 16, 20, 0, 0], [18, 20, 5, 0, 0], [19, 9, 0, 0, 0], [14, 14, 0, 0, 0]]
+N = 15
+EvalFile = "datasets/N" + str(N) + "dataset100k.mat"
+trainingSet = sio.loadmat(EvalFile)
 
-MSEs = []
-total = 0
-for i,layers in enumerate(condensedOutput):
-    t0 = time.time()
-    N = 15
-    EvalFile = "datasets/N" + str(N) + "dataset100k.mat"
+X = numpy.array(trainingSet['inputs'])
+Y = numpy.array(trainingSet['labels'][0])
 
-    evalSet = sio.loadmat(EvalFile)
-    CVtrain(handle_zeros(layers), evalSet, 10, 'trash', batch=10, verbose=1, epochs=1000)
-    t1 = time.time()
-    MSEs.append(getMSE('trash'))
-    total = total + getMSE('trash')
-    print("MSE after 10-Fold CV:",getMSE('trash'))
-    print("current avg MSE:", total/(i+1))
-    print("Total Time:", (t1-t0)/60, "minutes")
+mi = min(Y)
+ma = max(Y)
+avg = sum(Y)/len(Y)
+print("Min:", mi, "Max:", ma)
+print("Variance", ma - mi)
+print("Average:", avg)
+
+totalError = 0
+i = 0
+for j in range(len(Y)):
+    error = Y[i] - avg
+    totalError += math.pow(error, 2)
+    i += 1
+MSE = (totalError/i)
+print("Avg Guess MSE:", MSE)
+
 
 '''
 
