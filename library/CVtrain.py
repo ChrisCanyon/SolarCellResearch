@@ -18,10 +18,10 @@ def Kfold(X,Y, folds):
     foldSize = int(dataSize/folds)
 
     for i in range(0, dataSize, foldSize):
-        X_train = X[i:i+foldSize]
-        Y_train = Y[i:i+foldSize]
-        X_evaluate = numpy.array(list(X[0:i]) + list(X[(i+foldSize):dataSize]))
-        Y_evaluate = numpy.array(list(Y[0:i]) + list(Y[(i+foldSize):dataSize]))
+        X_evaluate = X[i:i+foldSize]
+        Y_evaluate = Y[i:i+foldSize]
+        X_train = numpy.array(list(X[0:i]) + list(X[(i+foldSize):dataSize]))
+        Y_train = numpy.array(list(Y[0:i]) + list(Y[(i+foldSize):dataSize]))
         yield (X_train, Y_train, X_evaluate, Y_evaluate)
 
 # saves model to file with name 'name'

@@ -1,15 +1,15 @@
-N = 16;
+N = 2;
 
-while N < 1000
+while N < 3
     tic
     disp("Generating Dataset for N = " + string(N));
-    s = 10;%in 1000s
+    s = 100;%in 1000s
     
     [inputs, labels] = generateDataset(N,s*1000, 8);
 
     disp("Generation Finished. Saving Dataset");
     save("datasets/N" + string(N)  + "dataset" + string(s) + "k");
-    N = int32(N + N*.25);
+    N = N + 1;
     
     x = toc;
     disp("Time Elapsed: " + string(x/60) + " minutes")

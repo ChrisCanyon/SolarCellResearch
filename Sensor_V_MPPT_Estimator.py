@@ -3,7 +3,19 @@ from library.config.genetic import *
 from library.CVtrain import *
 import scipy.io as sio
 
-datasets = [7, 8, 9, 10, 11,16, 20, 25, 31, 39, 49, 61, 76, 95]
+datasets = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+EPOCHS = 500
+BATCH_SIZE = 150
+POSSIBLE_NODES = 20
+POSSIBLE_LAYERS = 5
+outputStructures = []
+outputMSEs = []
+
+for N in datasets:
+    outputStructures.append([])
+    outputMSEs.append([])
+    
+i = 0
 for N in datasets:
     t0 = time.time()
 
@@ -14,7 +26,7 @@ for N in datasets:
     print("Genetically searching for best layer structure...")
     print("  Training on:    ", TrainFile)
     print("  Evaluating with:", EvalFile)
-    layers = genetic_config(20, 5, TrainFile, 25, 150, 0, 500)
+    layers = genetic_config(POSSIBLE_NODES, POSSIBLE_LAYERS, TrainFile, 25, BATCH_SIZE, 0, EPOCHS)
     print("Result: ", layers)
 
     evalSet = sio.loadmat(EvalFile)
@@ -22,3 +34,9 @@ for N in datasets:
     t1 = time.time()
     print("MSE after 10-Fold CV:",getMSE(ModeName))
     print("Total Time:", (t1-t0)/60, "minutes")
+    outputStructures[i].append(layers)
+    outputMSEs[i].append(getMSE(ModeName))
+    i = i + 1
+
+print(outputStructures)
+print(outputMSEs)

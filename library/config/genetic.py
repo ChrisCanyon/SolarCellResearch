@@ -147,8 +147,6 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
 
     minMSE = None
     bestStructure = None
-    oldAvg = None
-    accuracy = .01
     stop = 0
     first = True
     #train a generation
@@ -166,7 +164,6 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         genMinMSE = min(MSEs)
         if minMSE == None:
             minMSE = genMinMSE
-            oldAvg = avgMSE
             bestStructure = currentGen[MSEs.index(genMinMSE)]
 
         if (bestStructure == currentGen[MSEs.index(genMinMSE)]): #generation has same best structure
@@ -174,11 +171,10 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         else: #new best found. reset stop condition
             stop = 0
 
-        if not first and ((genMinMSE - minMSE) < accuracy): #generation didnt improve enough
+        if not first and (minMSE < genMinMSE): #generation didnt improve enough
             if(epochs < 800):
                 print("Increasing Epochs")
                 epochs = epochs + 100 #increase training strength
-                accuracy = genMinMSE - minMSE * .75
             else:
                 stop = 4
 
