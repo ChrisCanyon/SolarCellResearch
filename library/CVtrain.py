@@ -136,7 +136,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
     bestModel = None
     bestMSE = 1000
     totalMSE = 0
-    for i in range(folds):  #TODO: parallelize?
+    for i in range(folds): 
         if verbose == 1:
             print("Fold", i)
 
@@ -164,7 +164,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
 
     avgMSE = totalMSE/folds
     save_model(name, model=None, layers=layers, MSE=avgMSE)
-    return #TODO: either reload model from file and return or just expect calling functions to load data as they need it OR return MSE
+    return avgMSE 
 
 # train_model creates a keras.Sequential() NN with network structure 'layers'
 # returns a trained model

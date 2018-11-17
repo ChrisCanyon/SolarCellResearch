@@ -55,8 +55,7 @@ def train_generation(gen, trainingSet, batchSize, verbose, epochs):
 
     for i in range(len(gen)):
         trainFriendlyLayer = handle_zeros(gen[i])
-        CVtrain(trainFriendlyLayer, trainingSet, 5, "trash", batchSize, verbose, epochs)
-        MSE = getMSE('trash')
+        MSE = CVtrain(trainFriendlyLayer, trainingSet, 5, "trash", batchSize, verbose, epochs)
         MSEs.append(MSE)
     
     print("MSEs after training:", MSEs)

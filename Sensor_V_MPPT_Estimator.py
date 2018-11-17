@@ -30,12 +30,13 @@ for N in datasets:
     print("Result: ", layers)
 
     evalSet = sio.loadmat(EvalFile)
-    CVtrain(layers, evalSet, 10, ModeName, batch=10, verbose=1, epochs=1000)
+    MSE = CVtrain(layers, evalSet, 10, ModeName, batch=10, verbose=1, epochs=1000)
     t1 = time.time()
-    print("MSE after 10-Fold CV:",getMSE(ModeName))
+    print("MSE after 10-Fold CV:",MSE)
     print("Total Time:", (t1-t0)/60, "minutes")
+    
     outputStructures[i].append(layers)
-    outputMSEs[i].append(getMSE(ModeName))
+    outputMSEs[i].append(MSE)
     i = i + 1
 
 print(outputStructures)
