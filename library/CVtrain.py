@@ -168,7 +168,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
 
     avgMSE = totalMSE/folds
     save_model(name, model=None, layers=layers, MSE=avgMSE)
-    return [avgMSE,weightAndBiases] 
+    return [avgMSE, weightAndBiases] 
 
 # train_model creates a keras.Sequential() NN with network structure 'layers'
 # returns a trained model

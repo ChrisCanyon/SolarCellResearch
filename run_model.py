@@ -29,7 +29,9 @@ layers = genetic_config(POSSIBLE_NODES, POSSIBLE_LAYERS, TrainFile, 25, BATCH_SI
 print("Result: ", layers)
 
 evalSet = sio.loadmat(EvalFile)
-MSE = CVtrain(layers, evalSet, 5, ModeName, batch=10, verbose=1, epochs=1000)
+[MSE, weightsAndBiases] = CVtrain(layers, evalSet, 5, ModeName, batch=10, verbose=1, epochs=1000)
+finalErrors = compute_errors([MSE], [weightsAndBiases])
 t1 = time.time()
-print("MSE after 10-Fold CV:",MSE)
+print("MSE after 5-Fold CV:",MSE)
+print("final score: ", finalErrors)
 print("Total Time:", (t1-t0)/60, "minutes")

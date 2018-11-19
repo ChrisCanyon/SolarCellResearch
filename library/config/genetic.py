@@ -60,7 +60,7 @@ def train_generation(gen, trainingSet, batchSize, verbose, epochs):
         MSEs.append(MSE)
         runtimeComplexities.append(weightsAndBiases)
 
-    return [MSEs, runtimeComplexities, compute_erros(MSEs, runtimeComplexities)]
+    return [MSEs, runtimeComplexities, compute_errors(MSEs, runtimeComplexities)]
 
 def mutate(layers, N, L, force=False):
     if force:
@@ -85,7 +85,7 @@ def select_parent(fitness, totalFitness):
         if chosen <= 0:
             return i
 
-def compute_erros(MSEs, runtimeComplexities):
+def compute_errors(MSEs, runtimeComplexities):
     lam = .001
     errors = []
     i = 0
@@ -151,7 +151,6 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
     # create first list of models
     generations = 20
     currentGen = generate_initial_generation(N, L, populationSize)
-    print("Gen 0:", currentGen)
 
     trainingSet = sio.loadmat(trainingSetFile)
 
@@ -164,20 +163,19 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         t0 = time.time()
         [MSEs, runtimeComplexities, errors] = train_generation(currentGen, trainingSet, batchSize, verbose, epochs)
         t1 = time.time()
-        totalMSE = 0
-        totalError = 0
-        for j in range(len(MSEs)):
-            totalMSE += MSEs[j]
-            totalError += errors[i]
-        avgMSE = totalMSE/(j+1)
-        avgErrors = totalError/(j+1)
+        totalMSE = sum(MSEs)
+        totalError = sum(errors)
+        avgMSE = totalMSE/len(MSEs)
+        avgErrors = totalError/len(errors)
+
         print("Gen {0} Train time: {1} minutes:".format(i, (t1-t0)/60))
-        print("Average MSE:        {0}".format(avgMSE))
-        print("Average Error:      {0}".format(avgErrors))
-        print("Errors:             {0}".format(errors))
-        print("MSEs:               {0}".format(MSEs))
-        print("Weights and Biases: {0}".format(runtimeComplexities))
-        
+        print(" Average MSE:        {0}".format(avgMSE))
+        print(" Average Error:      {0}".format(avgErrors))
+        print(" {0:20}|{1:20}|{2:20}|{3:10}".format("Structure", "Error", "MSE", "weights&biases"))
+
+        for j in range(len(MSEs)):
+            print(" {0:20}|{1:20}|{2:20}|{3:10}".format(str(currentGen[j]), str(errors[j]), str(MSEs[j]), str(runtimeComplexities[j])))
+
         #stop early conditions
         genMinError = min(errors)
         if minError == None:
@@ -206,6 +204,5 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
             return bestStructure
  
         currentGen = generate_next_generation(currentGen, errors, N, L, populationSize)
-        print("Next Gen:", currentGen)
     
     return bestStructure
