@@ -174,7 +174,7 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         avgMSE = totalMSE/(j+1)
         avgErrors = totalError/(j+1)
         print("Gen {0} Train time: {1} minutes, Average MSE: {2}".format(i, (t1-t0)/60, avgMSE))
-        print("Gen {0} Average Error: {2}".format(i, avgErrors))
+        print("Gen {0} Average Error: {1}".format(i, avgErrors))
         
         #stop early conditions
         genMinError = min(errors)
