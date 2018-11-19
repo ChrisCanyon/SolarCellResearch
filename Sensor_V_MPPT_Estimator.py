@@ -3,6 +3,7 @@ from library.config.genetic import *
 from library.CVtrain import *
 import scipy.io as sio
 
+
 datasets = [3, 4, 5, 6, 7, 8, 9, 10]
 EPOCHS = 500
 BATCH_SIZE = 150

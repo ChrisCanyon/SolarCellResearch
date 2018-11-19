@@ -173,16 +173,18 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
             totalError += errors[i]
         avgMSE = totalMSE/(j+1)
         avgErrors = totalError/(j+1)
-        print("Gen {0} Train time: {1} minutes, Average MSE: {2}".format(i, (t1-t0)/60, avgMSE))
-        print("Gen {0} Average Error: {1}".format(i, avgErrors))
+        print("Gen {0} Train time: {1} minutes:".format(i, (t1-t0)/60))
+        print("Average MSE:        {0}".format(avgMSE))
+        print("Average Error:      {0}".format(avgErrors))
+        print("Weights and Biases: {0}".format(runtimeComplexities))
         
         #stop early conditions
         genMinError = min(errors)
         if minError == None:
             minError = genMinError
-            bestStructure = currentGen[MSEs.index(genMinError)]
+            bestStructure = currentGen[errors.index(genMinError)]
 
-        if (bestStructure == currentGen[MSEs.index(genMinError)]): #generation has same best structure
+        if (bestStructure == currentGen[errors.index(genMinError)]): #generation has same best structure
             stop = stop + 1            
         else: #new best found. reset stop condition
             stop = 0
@@ -198,12 +200,12 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         first = False
         if genMinError < minError:
             minError = genMinError
-        bestStructure = handle_zeros(currentGen[MSEs.index(genMinError)])
+        bestStructure = handle_zeros(currentGen[errors.index(genMinError)])
 
         if stop == 4: #if same structure wins for 4 generations in a row, stop
             return bestStructure
  
-        currentGen = generate_next_generation(currentGen, MSEs, N, L, populationSize)
+        currentGen = generate_next_generation(currentGen, errors, N, L, populationSize)
         print("Next Gen:", currentGen)
     
     return bestStructure
