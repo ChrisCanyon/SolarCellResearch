@@ -18,10 +18,10 @@ def Kfold(X,Y, folds):
     foldSize = int(dataSize/folds)
 
     for i in range(0, dataSize, foldSize):
-        X_evaluate = X[i:i+foldSize]
-        Y_evaluate = Y[i:i+foldSize]
-        X_train = numpy.array(list(X[0:i]) + list(X[(i+foldSize):dataSize]))
-        Y_train = numpy.array(list(Y[0:i]) + list(Y[(i+foldSize):dataSize]))
+        X_train = X[i:i+foldSize]
+        Y_train = Y[i:i+foldSize]
+        X_evaluate = numpy.array(list(X[0:i]) + list(X[(i+foldSize):dataSize]))
+        Y_evaluate = numpy.array(list(Y[0:i]) + list(Y[(i+foldSize):dataSize]))
         yield (X_train, Y_train, X_evaluate, Y_evaluate)
 
 # saves model to file with name 'name'
@@ -134,6 +134,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
 
     #train model
     bestModel = None
+    weightAndBiases = None
     bestMSE = 1000
     totalMSE = 0
     for i in range(folds): 
@@ -150,6 +151,9 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
             t0 = time.time()
         model = train_model(layers, X_train, Y_train, batch, 0, epochs)
 
+        if weightAndBiases == None:
+            weightAndBiases = model.count_params()
+
         MSE = evaluate_model(model, X_eval, Y_eval, 0)
         if verbose==1:
             t1 = time.time()
@@ -164,7 +168,7 @@ def CVtrain(layers, trainingSet, folds=5, name="trash", batch=100, verbose=0, ep
 
     avgMSE = totalMSE/folds
     save_model(name, model=None, layers=layers, MSE=avgMSE)
-    return avgMSE 
+    return [avgMSE,weightAndBiases] 
 
 # train_model creates a keras.Sequential() NN with network structure 'layers'
 # returns a trained model

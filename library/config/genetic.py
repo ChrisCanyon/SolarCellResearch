@@ -3,6 +3,7 @@
 
 from library.CVtrain import *
 import scipy.io as sio
+import math
 from math import ceil
 
 # adds 0s to make layer arrays all the same size
@@ -52,14 +53,16 @@ def reproduce(model1, model2):
 
 def train_generation(gen, trainingSet, batchSize, verbose, epochs):
     MSEs = []
-
+    runtimeComplexities = []
     for i in range(len(gen)):
         trainFriendlyLayer = handle_zeros(gen[i])
-        MSE = CVtrain(trainFriendlyLayer, trainingSet, 5, "trash", batchSize, verbose, epochs)
+        [MSE, weightsAndBiases] = CVtrain(trainFriendlyLayer, trainingSet, 5, "trash", batchSize, verbose, epochs)
         MSEs.append(MSE)
-    
+        runtimeComplexities.append(weightsAndBiases)
+
     print("MSEs after training:", MSEs)
-    return MSEs
+
+    return [MSEs, runtimeComplexities, compute_erros(MSEs, runtimeComplexities)]
 
 def mutate(layers, N, L, force=False):
     if force:
@@ -83,6 +86,16 @@ def select_parent(fitness, totalFitness):
         chosen = chosen - fitness[i]
         if chosen <= 0:
             return i
+
+def compute_erros(MSEs, runtimeComplexities):
+    lam = .001
+    errors = []
+    i = 0
+    while i < len(MSEs):
+        errors.append(MSEs[i] * math.exp(lam * runtimeComplexities[i]))
+        i = i + 1
+    
+    return errors
 
 # convert errors to a fitness value
 def fitness_score(errors):
@@ -144,33 +157,37 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
 
     trainingSet = sio.loadmat(trainingSetFile)
 
-    minMSE = None
+    minError = None
     bestStructure = None
     stop = 0
     first = True
     #train a generation
     for i in range(generations):
         t0 = time.time()
-        MSEs = train_generation(currentGen, trainingSet, batchSize, verbose, epochs)
+        [MSEs, runtimeComplexities, errors] = train_generation(currentGen, trainingSet, batchSize, verbose, epochs)
         t1 = time.time()
         totalMSE = 0
+        totalError = 0
         for j in range(len(MSEs)):
             totalMSE += MSEs[j]
+            totalError += errors[i]
         avgMSE = totalMSE/(j+1)
+        avgErrors = totalError/(j+1)
         print("Gen {0} Train time: {1} minutes, Average MSE: {2}".format(i, (t1-t0)/60, avgMSE))
+        print("Gen {0} Average Error: {2}".format(i, avgErrors))
         
         #stop early conditions
-        genMinMSE = min(MSEs)
-        if minMSE == None:
-            minMSE = genMinMSE
-            bestStructure = currentGen[MSEs.index(genMinMSE)]
+        genMinError = min(errors)
+        if minError == None:
+            minError = genMinError
+            bestStructure = currentGen[MSEs.index(genMinError)]
 
-        if (bestStructure == currentGen[MSEs.index(genMinMSE)]): #generation has same best structure
+        if (bestStructure == currentGen[MSEs.index(genMinError)]): #generation has same best structure
             stop = stop + 1            
         else: #new best found. reset stop condition
             stop = 0
 
-        if not first and (minMSE < genMinMSE): #generation didnt improve enough
+        if not first and (minError < genMinError): #generation didnt improve enough
             if(epochs < 800):
                 print("Increasing Epochs")
                 epochs = epochs + 100 #increase training strength
@@ -179,9 +196,9 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
 
         # update stop condition variables
         first = False
-        if genMinMSE < minMSE:
-            minMSE = genMinMSE
-        bestStructure = handle_zeros(currentGen[MSEs.index(genMinMSE)])
+        if genMinError < minError:
+            minError = genMinError
+        bestStructure = handle_zeros(currentGen[MSEs.index(genMinError)])
 
         if stop == 4: #if same structure wins for 4 generations in a row, stop
             return bestStructure

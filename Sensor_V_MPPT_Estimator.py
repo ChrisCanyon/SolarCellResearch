@@ -3,7 +3,7 @@ from library.config.genetic import *
 from library.CVtrain import *
 import scipy.io as sio
 
-datasets = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+datasets = [3, 4, 5, 6, 7, 8, 9, 10]
 EPOCHS = 500
 BATCH_SIZE = 150
 POSSIBLE_NODES = 20
@@ -30,7 +30,7 @@ for N in datasets:
     print("Result: ", layers)
 
     evalSet = sio.loadmat(EvalFile)
-    MSE = CVtrain(layers, evalSet, 10, ModeName, batch=10, verbose=1, epochs=1000)
+    MSE = CVtrain(layers, evalSet, 5, ModeName, batch=10, verbose=1, epochs=1000)
     t1 = time.time()
     print("MSE after 10-Fold CV:",MSE)
     print("Total Time:", (t1-t0)/60, "minutes")
