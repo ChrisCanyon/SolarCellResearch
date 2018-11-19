@@ -60,8 +60,6 @@ def train_generation(gen, trainingSet, batchSize, verbose, epochs):
         MSEs.append(MSE)
         runtimeComplexities.append(weightsAndBiases)
 
-    print("MSEs after training:", MSEs)
-
     return [MSEs, runtimeComplexities, compute_erros(MSEs, runtimeComplexities)]
 
 def mutate(layers, N, L, force=False):
@@ -176,6 +174,8 @@ def genetic_config(N, L, trainingSetFile, populationSize, batchSize=250, verbose
         print("Gen {0} Train time: {1} minutes:".format(i, (t1-t0)/60))
         print("Average MSE:        {0}".format(avgMSE))
         print("Average Error:      {0}".format(avgErrors))
+        print("Errors:             {0}".format(errors))
+        print("MSEs:               {0}".format(MSEs))
         print("Weights and Biases: {0}".format(runtimeComplexities))
         
         #stop early conditions
