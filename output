@@ -1,4 +1,0 @@
-  File "run_model.py", line 8
-    MSE = CVtrain(20,10,20), Trainfile, "test", batch=150, verbose=1, epochs=500)
-                                                                                ^
-SyntaxError: invalid syntax

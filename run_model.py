@@ -8,8 +8,6 @@ EPOCHS = 500
 BATCH_SIZE = 150
 POSSIBLE_NODES = 20
 POSSIBLE_LAYERS = 5
-outputStructures = []
-outputMSEs = []
 
 if len(sys.argv) < 2:
     print("Error: please provide a number of cells per sensor")
@@ -32,6 +30,9 @@ evalSet = sio.loadmat(EvalFile)
 [MSE, weightsAndBiases] = CVtrain(layers, evalSet, 5, ModeName, batch=10, verbose=1, epochs=1000)
 finalErrors = compute_errors([MSE], [weightsAndBiases])
 t1 = time.time()
-print("MSE after 5-Fold CV:",MSE)
-print("final score: ", finalErrors)
 print("Total Time:", (t1-t0)/60, "minutes")
+print("CellsPerSensor:", N)
+print(" Resulting Network Architecture:", layers)
+print(" MSE after 5-Fold CV:", MSE)
+print(" Weights and Biases:", weightsAndBiases)
+print(" Objective Function Value:", finalErrors[0])
