@@ -10,3 +10,5 @@ NNs/test.h5
 NNs/test.json
 NNs/test.h5
 NNs/trash_structure
+__pycache__
+library/__pycache__
