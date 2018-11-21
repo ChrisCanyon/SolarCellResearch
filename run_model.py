@@ -9,15 +9,16 @@ BATCH_SIZE = 25
 POSSIBLE_NODES = 20
 POSSIBLE_LAYERS = 5
 
-if len(sys.argv) < 2:
-    print("Error: please provide a number of cells per sensor")
+if len(sys.argv) < 3:
+    print("Error: please provide a number of cells per sensor and value of i")
     exit()
 
 N = sys.argv[1]
+i = sys.argv[2]
 t0 = time.time()
 
-TrainFile = "datasets/N" + str(N) + "dataset10k.mat"
-EvalFile = "datasets/N" + str(N) + "dataset100k.mat"
+TrainFile = "datasets/N" + str(N) + "dataset10k" + str(i) + ".mat"
+EvalFile = "datasets/N" + str(N) + "dataset100k" + str(i) + ".mat"
 ModeName = "N"  + str(N) + "geneticResult"
 
 print("Genetically searching for best layer structure...")
