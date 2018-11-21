@@ -5,7 +5,7 @@ import scipy.io as sio
 import sys
 
 EPOCHS = 600
-BATCH_SIZE = 25
+BATCH_SIZE = 250
 POSSIBLE_NODES = 20
 POSSIBLE_LAYERS = 5
 
