@@ -4,8 +4,8 @@ from library.CVtrain import *
 import scipy.io as sio
 import sys
 
-EPOCHS = 500
-BATCH_SIZE = 150
+EPOCHS = 600
+BATCH_SIZE = 25
 POSSIBLE_NODES = 20
 POSSIBLE_LAYERS = 5
 
