@@ -6,7 +6,7 @@ if len(sys.argv) < 2:
 
 templateFilename = sys.argv[1]
 
-for j in range(1, 101):
+for j in range(1, 9):
     outputFilename = templateFilename + "-" + str(j) + ".script"
 
     lines = [line.rstrip('\n') for line in open(templateFilename)]

@@ -1,0 +1,799 @@
+==> slurm-142830.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.3787910132405221
+ Weights and Biases: 61
+ Objective Function Value: 0.44119397738107935
+~/workspace/SolarCellResearch
+
+==> slurm-142831.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.29732603634871413
+ Weights and Biases: 69
+ Objective Function Value: 0.35330415052832476
+~/workspace/SolarCellResearch
+
+==> slurm-142832.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 2]
+ MSE after 5-Fold CV: 0.5703385746908092
+ Weights and Biases: 80
+ Objective Function Value: 0.6966131082124943
+~/workspace/SolarCellResearch
+
+==> slurm-142833.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 6, 9]
+ MSE after 5-Fold CV: 0.38430631454958314
+ Weights and Biases: 214
+ Objective Function Value: 0.6561831412648799
+~/workspace/SolarCellResearch
+
+==> slurm-142834.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18]
+ MSE after 5-Fold CV: 0.2467413547349418
+ Weights and Biases: 73
+ Objective Function Value: 0.2961424655783337
+~/workspace/SolarCellResearch
+
+==> slurm-142835.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.26338263769252457
+ Weights and Biases: 69
+ Objective Function Value: 0.31297016640927405
+~/workspace/SolarCellResearch
+
+==> slurm-142836.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 5]
+ MSE after 5-Fold CV: 0.3237379472689276
+ Weights and Biases: 131
+ Objective Function Value: 0.4491847997530009
+~/workspace/SolarCellResearch
+
+==> slurm-142837.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [12, 6]
+ MSE after 5-Fold CV: 0.4478901454269947
+ Weights and Biases: 121
+ Objective Function Value: 0.6061018196895672
+~/workspace/SolarCellResearch
+
+==> slurm-142838.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [19]
+ MSE after 5-Fold CV: 0.41469801397505224
+ Weights and Biases: 77
+ Objective Function Value: 0.502728658476097
+~/workspace/SolarCellResearch
+
+==> slurm-142839.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.5907627198448178
+ Weights and Biases: 61
+ Objective Function Value: 0.6880864248257639
+~/workspace/SolarCellResearch
+
+==> slurm-142840.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [19]
+ MSE after 5-Fold CV: 0.27399850599279457
+ Weights and Biases: 77
+ Objective Function Value: 0.33216195086600814
+~/workspace/SolarCellResearch
+
+==> slurm-142841.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.26848411185445703
+ Weights and Biases: 61
+ Objective Function Value: 0.3127148454746461
+~/workspace/SolarCellResearch
+
+==> slurm-142842.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.21223771172618658
+ Weights and Biases: 61
+ Objective Function Value: 0.24720227490528554
+~/workspace/SolarCellResearch
+
+==> slurm-142843.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.2969310458359995
+ Weights and Biases: 57
+ Objective Function Value: 0.34240695033767676
+~/workspace/SolarCellResearch
+
+==> slurm-142844.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16, 6]
+ MSE after 5-Fold CV: 0.2450012145031973
+ Weights and Biases: 157
+ Objective Function Value: 0.3627678752818562
+~/workspace/SolarCellResearch
+
+==> slurm-142845.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.24992056363614776
+ Weights and Biases: 57
+ Objective Function Value: 0.28819666795162613
+~/workspace/SolarCellResearch
+
+==> slurm-142846.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [20]
+ MSE after 5-Fold CV: 0.3111649592237494
+ Weights and Biases: 81
+ Objective Function Value: 0.38100907245806936
+~/workspace/SolarCellResearch
+
+==> slurm-142847.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [12, 4]
+ MSE after 5-Fold CV: 0.7134848430067589
+ Weights and Biases: 93
+ Objective Function Value: 0.9002398191341493
+~/workspace/SolarCellResearch
+
+==> slurm-142848.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.39970190125318117
+ Weights and Biases: 61
+ Objective Function Value: 0.4655497765695286
+~/workspace/SolarCellResearch
+
+==> slurm-142849.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18, 5]
+ MSE after 5-Fold CV: 0.5222938381046961
+ Weights and Biases: 155
+ Objective Function Value: 0.7694918313982796
+~/workspace/SolarCellResearch
+
+==> slurm-142850.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.2947446942910661
+ Weights and Biases: 57
+ Objective Function Value: 0.3398857523175809
+~/workspace/SolarCellResearch
+
+==> slurm-142851.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14, 5]
+ MSE after 5-Fold CV: 0.5562055657487193
+ Weights and Biases: 123
+ Objective Function Value: 0.7564511432228637
+~/workspace/SolarCellResearch
+
+==> slurm-142852.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [11, 6]
+ MSE after 5-Fold CV: 0.40054452489286724
+ Weights and Biases: 112
+ Objective Function Value: 0.5299724020542872
+~/workspace/SolarCellResearch
+
+==> slurm-142853.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14, 5]
+ MSE after 5-Fold CV: 0.3204580083630539
+ Weights and Biases: 123
+ Objective Function Value: 0.43582955962484865
+~/workspace/SolarCellResearch
+
+==> slurm-142854.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.463933357078936
+ Weights and Biases: 53
+ Objective Function Value: 0.5296629786408321
+~/workspace/SolarCellResearch
+
+==> slurm-142855.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16, 5]
+ MSE after 5-Fold CV: 0.33192038831914616
+ Weights and Biases: 139
+ Objective Function Value: 0.46984137885441746
+~/workspace/SolarCellResearch
+
+==> slurm-142856.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.5011492323178872
+ Weights and Biases: 69
+ Objective Function Value: 0.5955015106861796
+~/workspace/SolarCellResearch
+
+==> slurm-142857.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [12, 5]
+ MSE after 5-Fold CV: 0.6503414266144631
+ Weights and Biases: 107
+ Objective Function Value: 0.8497969993756327
+~/workspace/SolarCellResearch
+
+==> slurm-142858.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16, 3]
+ MSE after 5-Fold CV: 0.3982881948349086
+ Weights and Biases: 103
+ Objective Function Value: 0.5152621760680539
+~/workspace/SolarCellResearch
+
+==> slurm-142859.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16, 2, 3]
+ MSE after 5-Fold CV: 0.3077575123021939
+ Weights and Biases: 95
+ Objective Function Value: 0.3902596064249243
+~/workspace/SolarCellResearch
+
+==> slurm-142860.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.20928034695221048
+ Weights and Biases: 69
+ Objective Function Value: 0.2486819388918396
+~/workspace/SolarCellResearch
+
+==> slurm-142861.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14, 6]
+ MSE after 5-Fold CV: 0.6720111374213447
+ Weights and Biases: 139
+ Objective Function Value: 0.9512481020237382
+~/workspace/SolarCellResearch
+
+==> slurm-142862.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [10, 6]
+ MSE after 5-Fold CV: 0.8450975605761182
+ Weights and Biases: 103
+ Objective Function Value: 1.0932957935967655
+~/workspace/SolarCellResearch
+
+==> slurm-142863.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 4]
+ MSE after 5-Fold CV: 0.4349296271076931
+ Weights and Biases: 114
+ Objective Function Value: 0.5783529030328423
+~/workspace/SolarCellResearch
+
+==> slurm-142864.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.2708360603205306
+ Weights and Biases: 65
+ Objective Function Value: 0.3186246277393563
+~/workspace/SolarCellResearch
+
+==> slurm-142865.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13, 2, 10]
+ MSE after 5-Fold CV: 0.5950629843087631
+ Weights and Biases: 108
+ Objective Function Value: 0.7795113553917159
+~/workspace/SolarCellResearch
+
+==> slurm-142866.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16, 5]
+ MSE after 5-Fold CV: 0.6163605741084157
+ Weights and Biases: 139
+ Objective Function Value: 0.8724733767548857
+~/workspace/SolarCellResearch
+
+==> slurm-142867.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [11]
+ MSE after 5-Fold CV: 0.4888923923026806
+ Weights and Biases: 45
+ Objective Function Value: 0.5471059128416493
+~/workspace/SolarCellResearch
+
+==> slurm-142868.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18]
+ MSE after 5-Fold CV: 0.27846485778273605
+ Weights and Biases: 73
+ Objective Function Value: 0.33421746285411524
+~/workspace/SolarCellResearch
+
+==> slurm-142869.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17, 4]
+ MSE after 5-Fold CV: 0.42284361531122994
+ Weights and Biases: 128
+ Objective Function Value: 0.5823096826172875
+~/workspace/SolarCellResearch
+
+==> slurm-142870.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.28139453662048053
+ Weights and Biases: 57
+ Objective Function Value: 0.3244909768684785
+~/workspace/SolarCellResearch
+
+==> slurm-142871.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.17231465148670563
+ Weights and Biases: 69
+ Objective Function Value: 0.20475664464074494
+~/workspace/SolarCellResearch
+
+==> slurm-142872.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.3182224777478514
+ Weights and Biases: 57
+ Objective Function Value: 0.36695923064482283
+~/workspace/SolarCellResearch
+
+==> slurm-142873.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17, 3]
+ MSE after 5-Fold CV: 0.2433448709018955
+ Weights and Biases: 109
+ Objective Function Value: 0.31957105997181806
+~/workspace/SolarCellResearch
+
+==> slurm-142874.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.39727204710624314
+ Weights and Biases: 69
+ Objective Function Value: 0.47206717869437903
+~/workspace/SolarCellResearch
+
+==> slurm-142875.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18]
+ MSE after 5-Fold CV: 0.18150007453545705
+ Weights and Biases: 73
+ Objective Function Value: 0.2178389578565846
+~/workspace/SolarCellResearch
+
+==> slurm-142876.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.26230883617756284
+ Weights and Biases: 61
+ Objective Function Value: 0.3055222396786274
+~/workspace/SolarCellResearch
+
+==> slurm-142877.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18, 4]
+ MSE after 5-Fold CV: 0.2246327875986318
+ Weights and Biases: 135
+ Objective Function Value: 0.31480928588422386
+~/workspace/SolarCellResearch
+
+==> slurm-142878.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.3173695004034641
+ Weights and Biases: 53
+ Objective Function Value: 0.36233409895734303
+~/workspace/SolarCellResearch
+
+==> slurm-142879.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13, 4]
+ MSE after 5-Fold CV: 0.457244297057043
+ Weights and Biases: 100
+ Objective Function Value: 0.587113299056763
+~/workspace/SolarCellResearch
+
+==> slurm-142880.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17, 4]
+ MSE after 5-Fold CV: 0.34705870015129503
+ Weights and Biases: 128
+ Objective Function Value: 0.4779441718326963
+~/workspace/SolarCellResearch
+
+==> slurm-142881.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.33069174294485054
+ Weights and Biases: 57
+ Objective Function Value: 0.3813382022240169
+~/workspace/SolarCellResearch
+
+==> slurm-142882.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.16493617090639257
+ Weights and Biases: 69
+ Objective Function Value: 0.195989004088204
+~/workspace/SolarCellResearch
+
+==> slurm-142883.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18, 5]
+ MSE after 5-Fold CV: 0.19909555721883743
+ Weights and Biases: 155
+ Objective Function Value: 0.29332608154736467
+~/workspace/SolarCellResearch
+
+==> slurm-142884.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [10, 4]
+ MSE after 5-Fold CV: 0.7852454382223708
+ Weights and Biases: 79
+ Objective Function Value: 0.956706186411653
+~/workspace/SolarCellResearch
+
+==> slurm-142885.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.22591383188862016
+ Weights and Biases: 65
+ Objective Function Value: 0.26577594763966733
+~/workspace/SolarCellResearch
+
+==> slurm-142886.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13, 7]
+ MSE after 5-Fold CV: 0.5498786635495204
+ Weights and Biases: 145
+ Objective Function Value: 0.7901301211071409
+~/workspace/SolarCellResearch
+
+==> slurm-142887.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [19, 6]
+ MSE after 5-Fold CV: 0.6024478207283147
+ Weights and Biases: 184
+ Objective Function Value: 0.9543219201323426
+~/workspace/SolarCellResearch
+
+==> slurm-142888.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.2776751543014254
+ Weights and Biases: 57
+ Objective Function Value: 0.3202019596880017
+~/workspace/SolarCellResearch
+
+==> slurm-142889.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [12]
+ MSE after 5-Fold CV: 0.6180399132149826
+ Weights and Biases: 49
+ Objective Function Value: 0.6985823308757774
+~/workspace/SolarCellResearch
+
+==> slurm-142890.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [19]
+ MSE after 5-Fold CV: 0.12053243095813904
+ Weights and Biases: 77
+ Objective Function Value: 0.14611863398529165
+~/workspace/SolarCellResearch
+
+==> slurm-142891.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.4570238040995626
+ Weights and Biases: 53
+ Objective Function Value: 0.521774486993725
+~/workspace/SolarCellResearch
+
+==> slurm-142892.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 4]
+ MSE after 5-Fold CV: 0.24634507116515353
+ Weights and Biases: 114
+ Objective Function Value: 0.3275803214503033
+~/workspace/SolarCellResearch
+
+==> slurm-142893.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.1825071144682509
+ Weights and Biases: 61
+ Objective Function Value: 0.21257378585553416
+~/workspace/SolarCellResearch
+
+==> slurm-142894.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 4]
+ MSE after 5-Fold CV: 0.2800045283053477
+ Weights and Biases: 114
+ Objective Function Value: 0.37233938944251577
+~/workspace/SolarCellResearch
+
+==> slurm-142895.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [12, 7]
+ MSE after 5-Fold CV: 0.5652319484617727
+ Weights and Biases: 135
+ Objective Function Value: 0.7921384405028987
+~/workspace/SolarCellResearch
+
+==> slurm-142896.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.4520931292644609
+ Weights and Biases: 53
+ Objective Function Value: 0.5161452389993303
+~/workspace/SolarCellResearch
+
+==> slurm-142897.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.2003886783561542
+ Weights and Biases: 61
+ Objective Function Value: 0.23340120260443278
+~/workspace/SolarCellResearch
+
+==> slurm-142898.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [17]
+ MSE after 5-Fold CV: 0.23674590808846002
+ Weights and Biases: 69
+ Objective Function Value: 0.28131849122742314
+~/workspace/SolarCellResearch
+
+==> slurm-142899.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13, 6, 4]
+ MSE after 5-Fold CV: 0.3884924093772519
+ Weights and Biases: 156
+ Objective Function Value: 0.5737958272193942
+~/workspace/SolarCellResearch
+
+==> slurm-142900.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [12]
+ MSE after 5-Fold CV: 0.3652240209301233
+ Weights and Biases: 49
+ Objective Function Value: 0.41281969396762913
+~/workspace/SolarCellResearch
+
+==> slurm-142901.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18, 5]
+ MSE after 5-Fold CV: 0.22990008428610031
+ Weights and Biases: 155
+ Objective Function Value: 0.33871017421512933
+~/workspace/SolarCellResearch
+
+==> slurm-142902.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15, 5]
+ MSE after 5-Fold CV: 0.4083283489075705
+ Weights and Biases: 131
+ Objective Function Value: 0.5665535634139258
+~/workspace/SolarCellResearch
+
+==> slurm-142903.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.36822618538168866
+ Weights and Biases: 57
+ Objective Function Value: 0.4246211601620738
+~/workspace/SolarCellResearch
+
+==> slurm-142904.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.47294879939300083
+ Weights and Biases: 53
+ Objective Function Value: 0.5399557199515624
+~/workspace/SolarCellResearch
+
+==> slurm-142905.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.2492489459720763
+ Weights and Biases: 61
+ Objective Function Value: 0.29031083100600363
+~/workspace/SolarCellResearch
+
+==> slurm-142906.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.2572743377184002
+ Weights and Biases: 61
+ Objective Function Value: 0.2996583455478907
+~/workspace/SolarCellResearch
+
+==> slurm-142907.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.19255253283854093
+ Weights and Biases: 61
+ Objective Function Value: 0.22427411118091622
+~/workspace/SolarCellResearch
+
+==> slurm-142908.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.337670386631505
+ Weights and Biases: 65
+ Objective Function Value: 0.39725175854255323
+~/workspace/SolarCellResearch
+
+==> slurm-142909.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [20]
+ MSE after 5-Fold CV: 0.09273320061083716
+ Weights and Biases: 81
+ Objective Function Value: 0.11354810271357327
+~/workspace/SolarCellResearch
+
+==> slurm-142910.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.3160319237295233
+ Weights and Biases: 61
+ Objective Function Value: 0.3680958009452224
+~/workspace/SolarCellResearch
+
+==> slurm-142911.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [9, 4]
+ MSE after 5-Fold CV: 1.0134718926651491
+ Weights and Biases: 72
+ Objective Function Value: 1.21334614693464
+~/workspace/SolarCellResearch
+
+==> slurm-142912.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16, 4]
+ MSE after 5-Fold CV: 0.4064274211616398
+ Weights and Biases: 121
+ Objective Function Value: 0.5499928990466266
+~/workspace/SolarCellResearch
+
+==> slurm-142913.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.3588714232490191
+ Weights and Biases: 65
+ Objective Function Value: 0.4221936824205968
+~/workspace/SolarCellResearch
+
+==> slurm-142914.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.43605491070379865
+ Weights and Biases: 53
+ Objective Function Value: 0.49783474141317013
+~/workspace/SolarCellResearch
+
+==> slurm-142915.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14]
+ MSE after 5-Fold CV: 0.22908139903844274
+ Weights and Biases: 57
+ Objective Function Value: 0.26416592109120485
+~/workspace/SolarCellResearch
+
+==> slurm-142916.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.5075229113943368
+ Weights and Biases: 53
+ Objective Function Value: 0.5794282581234049
+~/workspace/SolarCellResearch
+
+==> slurm-142917.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [10, 5, 6]
+ MSE after 5-Fold CV: 0.915146477158103
+ Weights and Biases: 128
+ Objective Function Value: 1.2602736221286654
+~/workspace/SolarCellResearch
+
+==> slurm-142918.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [13]
+ MSE after 5-Fold CV: 0.38804051973388926
+ Weights and Biases: 53
+ Objective Function Value: 0.44301771877252255
+~/workspace/SolarCellResearch
+
+==> slurm-142919.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.31987928945748184
+ Weights and Biases: 65
+ Objective Function Value: 0.3763214521888164
+~/workspace/SolarCellResearch
+
+==> slurm-142920.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [15]
+ MSE after 5-Fold CV: 0.2957682454735325
+ Weights and Biases: 61
+ Objective Function Value: 0.34449383444224646
+~/workspace/SolarCellResearch
+
+==> slurm-142921.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.24697957532137718
+ Weights and Biases: 65
+ Objective Function Value: 0.2905587060780059
+~/workspace/SolarCellResearch
+
+==> slurm-142922.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14, 3, 6]
+ MSE after 5-Fold CV: 0.2891222988572303
+ Weights and Biases: 118
+ Objective Function Value: 0.3883277804791172
+~/workspace/SolarCellResearch
+
+==> slurm-142923.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [14, 4]
+ MSE after 5-Fold CV: 0.6814545926577711
+ Weights and Biases: 107
+ Objective Function Value: 0.8904523752484557
+~/workspace/SolarCellResearch
+
+==> slurm-142924.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [18]
+ MSE after 5-Fold CV: 0.14230068482831398
+ Weights and Biases: 73
+ Objective Function Value: 0.1707912956213275
+~/workspace/SolarCellResearch
+
+==> slurm-142925.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [20]
+ MSE after 5-Fold CV: 0.1887167145566913
+ Weights and Biases: 81
+ Objective Function Value: 0.23107608437001434
+~/workspace/SolarCellResearch
+
+==> slurm-142926.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [19]
+ MSE after 5-Fold CV: 0.2491624921187249
+ Weights and Biases: 77
+ Objective Function Value: 0.30205383480072134
+~/workspace/SolarCellResearch
+
+==> slurm-142927.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [19]
+ MSE after 5-Fold CV: 0.19343004846665454
+ Weights and Biases: 77
+ Objective Function Value: 0.23449070286711737
+~/workspace/SolarCellResearch
+
+==> slurm-142928.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [20]
+ MSE after 5-Fold CV: 0.1283995109143203
+ Weights and Biases: 81
+ Objective Function Value: 0.15722007606376087
+~/workspace/SolarCellResearch
+
+==> slurm-142929.out <==
+CellsPerSensor: 1
+ Resulting Network Architecture: [16]
+ MSE after 5-Fold CV: 0.2791853235368185
+ Weights and Biases: 65
+ Objective Function Value: 0.3284471044104437
+~/workspace/SolarCellResearch
