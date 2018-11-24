@@ -86,8 +86,8 @@ def select_parent(fitness, totalFitness):
             return i
 
 def compute_errors(MSEs, runtimeComplexities):
-    # lam = .001
-    lam = .0025
+    lam = .001
+    # lam = .0025
     errors = []
     i = 0
     while i < len(MSEs):
