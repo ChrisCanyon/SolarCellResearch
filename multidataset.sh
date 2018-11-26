@@ -1,3 +1,12 @@
+sbatch inputs_HPC/slurms/slurm1-1.script
+sbatch inputs_HPC/slurms/slurm1-2.script
+sbatch inputs_HPC/slurms/slurm1-3.script
+sbatch inputs_HPC/slurms/slurm1-4.script
+sbatch inputs_HPC/slurms/slurm1-5.script
+sbatch inputs_HPC/slurms/slurm1-6.script
+sbatch inputs_HPC/slurms/slurm1-7.script
+sbatch inputs_HPC/slurms/slurm1-8.script
+
 sbatch inputs_HPC/slurms/slurm2-1.script
 sbatch inputs_HPC/slurms/slurm2-2.script
 sbatch inputs_HPC/slurms/slurm2-3.script
