@@ -20,20 +20,18 @@ t0 = time.time()
 TrainFile = "datasets/N" + str(N) + "dataset10k" + str(i) + ".mat"
 EvalFile = "datasets/N" + str(N) + "dataset100k" + str(i) + ".mat"
 ModeName = "N"  + str(N) + "geneticResult"
-
-print("Genetically searching for best layer structure...")
-print("  Training on:    ", TrainFile)
-print("  Evaluating with:", EvalFile)
-layers = genetic_config(POSSIBLE_NODES, POSSIBLE_LAYERS, TrainFile, 25, BATCH_SIZE, 0, EPOCHS)
-print("Result: ", layers)
+layers = [15, 5, 5]
 
 evalSet = sio.loadmat(EvalFile)
 [MSE, weightsAndBiases] = CVtrain(layers, evalSet, 5, ModeName, batch=10, verbose=1, epochs=1000)
-finalErrors = compute_errors([MSE], [weightsAndBiases])
+finalErrors001 = compute_errors([MSE], [weightsAndBiases], 0.001)
+finalErrors0025 = compute_errors([MSE], [weightsAndBiases], 0.0025)
+
 t1 = time.time()
 print("Total Time:", (t1-t0)/60, "minutes")
 print("CellsPerSensor:", N)
 print(" Resulting Network Architecture:", layers)
 print(" MSE after 5-Fold CV:", MSE)
 print(" Weights and Biases:", weightsAndBiases)
-print(" Objective Function Value:", finalErrors[0])
+print(" Objective Function Value(0.001):", finalErrors001[0])
+print(" Objective Function Value(0.0025):", finalErrors0025[0])
