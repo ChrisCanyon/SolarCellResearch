@@ -1,0 +1,14 @@
+#!/bin/sh
+#SBATCH --time=7-00:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks-per-node=1
+#SBATCH --cpus-per-task=1
+
+TDIR=`mktemp -d`
+cp -a NNs library datasets run_model.py ${TDIR}
+pushd ${TDIR}
+source activate tensorflow
+python run_model.py 1
+popd
+cp -a ${TDIR}/NNs/* NNs/
+# rm -rf ${TDIR}

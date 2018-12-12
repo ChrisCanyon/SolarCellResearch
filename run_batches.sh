@@ -1,0 +1,10 @@
+sbatch slurms/slurm1.script
+sbatch slurms/slurm2.script
+sbatch slurms/slurm3.script
+sbatch slurms/slurm4.script
+sbatch slurms/slurm5.script
+sbatch slurms/slurm6.script
+sbatch slurms/slurm7.script
+sbatch slurms/slurm8.script
+sbatch slurms/slurm9.script
+sbatch slurms/slurm10.script

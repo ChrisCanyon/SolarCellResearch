@@ -1,56 +1,32 @@
-from library.test import *
-from Sensor_V_MPPT_Estimator import *
+from library.config.exhaustive import *
+from library.config.genetic import *
+from library.CVtrain import *
+import scipy.io as sio
+import sys
 
-ttt()
+if len(sys.argv) < 3:
+    print("Error: please provide a number of cells per sensor and value of i")
+    exit()
 
-'''
+N = sys.argv[1]
+i = sys.argv[2]
+t0 = time.time()
 
-def sortByMSE(layers, MSEs):
-   errors, structures = zip(*sorted(zip(MSEs, layers), key=lambda x: x[0], reverse=False))
-   errors = list(errors)
-   structures = list(structures)
+TrainFile = "datasets/N" + str(N) + "dataset10k" + str(i) + ".mat"
+EvalFile = "datasets/N" + str(N) + "dataset100k" + str(i) + ".mat"
+ModeName = "N"  + str(N) + "geneticResult"
+layers = [15, 5, 5]
 
-   return structures
+evalSet = sio.loadmat(EvalFile)
+[MSE, weightsAndBiases] = CVtrain(layers, evalSet, 5, ModeName, batch=10, verbose=1, epochs=1000)
+finalErrors001 = compute_errors([MSE], [weightsAndBiases], 0.001)
+finalErrors0025 = compute_errors([MSE], [weightsAndBiases], 0.0025)
 
-
-for i in range(10):
-    N = 20
-    L = 3
-    generation = generate_initial_generation(N, L, 10)
-
-    trainingSet = "dataset10k.mat"
-    evaluateSet = "dataset1k.mat"
-
-    smallBatch = 100
-    bigBatch = 1000
-
-    smallEpochs = 200
-    bigEpochs = 500
-
-    print("Layers options sorted by MSE")
-
-    # with const num epochs
-    smallBatchMSEs = train_generation(generation, trainingSet, evaluateSet, smallBatch, 0, bigEpochs)
-    bigBatchMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, bigEpochs)
-
-    print("With num epochs: ", bigEpochs)
-    print("\t", smallBatch, "batchSize:", sortByMSE(generation, smallBatchMSEs))
-    print("\t", bigBatch, "batchSize:", sortByMSE(generation, bigBatchMSEs))
-
-    #with const batchSize
-    smallEpochsMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, smallEpochs)
-    bigEpochsMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, bigEpochs)
-
-    print("With batchSize: ", bigBatch)
-    print("\t", smallEpochs,"epochs:", sortByMSE(generation, smallEpochsMSEs))
-    print("\t", bigEpochs, "epochs:", sortByMSE(generation, bigEpochsMSEs))
-
-    # big big vs small small
-    smallMSEs = train_generation(generation, trainingSet, evaluateSet, smallBatch, 0, smallEpochs)
-    bigMSEs = train_generation(generation, trainingSet, evaluateSet, bigBatch, 0, bigEpochs)
-
-    print("Large vs Small")
-    print("\tSmall:", sortByMSE(generation, smallMSEs))
-    print("\tLarge:", sortByMSE(generation, bigMSEs))
-    
-'''
+t1 = time.time()
+print("Total Time:", (t1-t0)/60, "minutes")
+print("CellsPerSensor:", N)
+print(" Resulting Network Architecture:", layers)
+print(" MSE after 5-Fold CV:", MSE)
+print(" Weights and Biases:", weightsAndBiases)
+print(" Objective Function Value(0.001):", finalErrors001[0])
+print(" Objective Function Value(0.0025):", finalErrors0025[0])

@@ -1,3 +1,14 @@
 
 *.asv
 Notes
+NNs/trash_MSE
+NNs/trash.h5
+NNs/trash.json
+NNs/trash.h5
+NNs/test_MSE
+NNs/test.h5
+NNs/test.json
+NNs/test.h5
+NNs/trash_structure
+__pycache__
+library/__pycache__
